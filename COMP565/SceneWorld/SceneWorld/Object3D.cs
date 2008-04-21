@@ -100,7 +100,7 @@ namespace SceneWorld
         }
 
 
-        protected Vector3 Right
+        public Vector3 Right
         {
             get
             {
@@ -118,7 +118,7 @@ namespace SceneWorld
             }
         }
 
-        protected Vector3 Up
+        public Vector3 Up
         {
             get
             {

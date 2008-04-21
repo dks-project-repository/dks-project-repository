@@ -72,6 +72,7 @@ namespace SceneWorld
         private TreasureChest treasures;
         public TreasureChest Treasures { get { return treasures; } }
         public HilbertCurve hilbert;
+        public Flock flock;
 
         // Constructor
         public SceneWorld()
@@ -245,6 +246,8 @@ namespace SceneWorld
             camera.Add(npAvatar.FirstPerson);
             camera.Add(npAvatar.FollowCamera);
             camera.Add(npAvatar.TopCamera);
+            flock = new Flock(this, "flock", "ThemeBuilding.x", 45f, 30f, 30f);
+            
         }
 
         /// <summary>
@@ -396,6 +399,8 @@ namespace SceneWorld
             foreach (MovableMesh3D mObj in movable) mObj.move();
             treasures.draw();
             hilbert.draw();
+            flock.doFlock();
+            flock.draw();
             ShowText();
 
             display.EndScene();
