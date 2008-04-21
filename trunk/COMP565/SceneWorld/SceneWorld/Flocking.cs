@@ -6,7 +6,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace SceneWorld
 {
-    class Flock
+    public class Flock
     {
         List<Boid> boids;
         private float cohesionWeight = 1;
@@ -22,28 +22,38 @@ namespace SceneWorld
 
         public Flock(SceneWorld sw, string label, string meshFile, float blindSpot, float cohesionRadius, float repulsionRadius)
         {
-            //create 5 boids
             avatar = sw.avatar;
             blindspot = blindSpot;
             cohesion = cohesionRadius;
             repulsion = repulsionRadius;
+            Random rand = new Random();
+            boids = new List<Boid>();
+            for (int i = 0; i < 5; i++)
+            {
+                Vector3 offset = new Vector3((float)rand.Next(), 0, (float)rand.Next());
+                Console.WriteLine(offset);
+                boids.Add(new Boid(sw, label + i, avatar.Location + offset, avatar.At, 0.0f, meshFile, this));
+            }
         }
 
 
         public void doFlock()
         {
             foreach (Boid b in boids)
+            {
                 b.At = cohesionWeight * (avatar.Location - b.Location) + directionWeight * b.At + b.getRepulsion() + b.getCohesion();
+                b.At = Vector3.Normalize(b.At);
+                b.Right = Vector3.Cross(b.Up, b.At);
+            }
         }
 
-         private Vector3 getAverageDirection(Boid a)
+        private Vector3 getAverageDirection(Boid a)
         {
             Vector3 temp = new Vector3();
-             foreach (Boid b in boids )
-                 if(a.isVisible(b))
-                temp += b.At;
-            
-            return Vector3.Scale(temp,1f/boids.Count) ;
+            foreach (Boid b in boids)
+                if (a.isVisible(b))
+                    temp += b.At;
+            return Vector3.Scale(temp, 1f / boids.Count);
         }
 
         public float CohesionWeight
@@ -76,12 +86,17 @@ namespace SceneWorld
         {
             get { return avatar.Location; }
         }
-
+        public void draw()
+        {
+            //if (autoMove && !(this is NPAvatar))
+            foreach (Boid b in boids)
+                b.draw();
+        }
 
 
     }
 
-    class Boid : NPAvatar
+    class Boid : Avatar
     {
         Flock flock;
 
@@ -90,8 +105,6 @@ namespace SceneWorld
             : base(sw, label, pos, orientAxis, radians, meshFile)
         {
             flock = f;
-
-
         }
 
 
@@ -106,8 +119,8 @@ namespace SceneWorld
         {
             Vector3 temp = flock.Location - Location;
             if (Vector3.Length(temp) <= flock.Cohesion)
-                return temp ;
-            return new Vector3(0,0,0);
+                return temp;
+            return new Vector3(0, 0, 0);
         }
 
         public Vector3 getRepulsion()
@@ -117,8 +130,5 @@ namespace SceneWorld
                 return temp;
             return new Vector3(0, 0, 0);
         }
-
- 
-
     }
 }
