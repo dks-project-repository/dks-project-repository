@@ -1,5 +1,0 @@
-obj\Debug\ResolveAssemblyReference.cache
-bin\Debug\SceneWorld.exe
-bin\Debug\SceneWorld.pdb
-obj\Debug\SceneWorld.exe
-obj\Debug\SceneWorld.pdb
