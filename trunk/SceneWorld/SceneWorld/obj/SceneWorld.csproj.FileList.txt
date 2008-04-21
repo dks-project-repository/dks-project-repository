@@ -1,0 +1,14 @@
+obj\Debug\SceneWorld.exe
+obj\Debug\SceneWorld.pdb
+bin\Debug\SceneWorld.exe
+bin\Debug\SceneWorld.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\SceneWorld.Properties.Resources.resources
+obj\Debug\SceneWorld.csproj.GenerateResource.Cache
+bin\Release\SceneWorld.exe
+bin\Release\SceneWorld.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\SceneWorld.Properties.Resources.resources
+obj\Release\SceneWorld.csproj.GenerateResource.Cache
+obj\Release\SceneWorld.exe
+obj\Release\SceneWorld.pdb
