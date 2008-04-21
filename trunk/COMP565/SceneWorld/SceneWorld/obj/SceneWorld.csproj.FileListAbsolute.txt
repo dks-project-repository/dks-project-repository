@@ -1,0 +1,7 @@
+C:\Documents and Settings\sdb39226\Desktop\SceneWorld\SceneWorld\obj\Debug\SceneWorld.exe
+C:\Documents and Settings\sdb39226\Desktop\SceneWorld\SceneWorld\obj\Debug\SceneWorld.pdb
+C:\Documents and Settings\sdb39226\Desktop\SceneWorld\SceneWorld\bin\Debug\SceneWorld.exe
+C:\Documents and Settings\sdb39226\Desktop\SceneWorld\SceneWorld\bin\Debug\SceneWorld.pdb
+C:\Documents and Settings\sdb39226\Desktop\SceneWorld\SceneWorld\obj\Debug\ResolveAssemblyReference.cache
+G:\SceneWorld\SceneWorld\obj\Debug\SceneWorld.exe
+G:\SceneWorld\SceneWorld\obj\Debug\SceneWorld.pdb
