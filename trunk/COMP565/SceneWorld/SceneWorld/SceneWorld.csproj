@@ -43,6 +43,7 @@
     <Compile Include="Avatar.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Flocking.cs" />
+    <Compile Include="HilbertCurve.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="MeshData.cs" />
     <Compile Include="ModeledMesh3D.cs" />
