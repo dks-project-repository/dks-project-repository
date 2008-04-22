@@ -8,6 +8,7 @@ namespace SceneWorld
     public class TreasureChest
     {
         private List<IndexPair> treasures;
+        private List<IndexPair> collectedTreasures;
         private static Mesh mesh;
         private static Material mat;
         private static Matrix matrix;
@@ -23,6 +24,7 @@ namespace SceneWorld
             mat.Emissive = System.Drawing.Color.White;
 
             treasures = new List<IndexPair>();
+            collectedTreasures = new List<IndexPair>();
             Random r = new Random();
             for (int i = 0; i < numTreasures; i++)
             {
