@@ -51,28 +51,13 @@ namespace SceneWorld
             Vector3 temp = new Vector3();
             foreach (Boid b in boids)
                 if (a != b && a.isVisible(b))
-                    temp += b.At;
-            return Vector3.Scale(temp, 1f / boids.Count);
+                    temp += b.At * (1 / (a.Location - b.Location).Length());
+            return Vector3.Normalize(temp);
         }
 
-        public Vector3 getAverageLocation(Boid a)
-        {
-            Vector3 temp = avatar.Location * 10;
-            foreach (Boid b in boids)
-                if (a != b && a.isVisible(b))
-                    temp += b.Location;
-            return Vector3.Scale(temp, 1f / (boids.Count + 9));
-        }
-
-        public float DirectionWeight
-        {
-            get { return directionWeight; }
-            set { directionWeight = value; }
-        }
         public float Blindspot
         {
             get { return blindspot; }
-            set { blindspot = value; }
         }
 
         public Vector3 Location
@@ -86,7 +71,6 @@ namespace SceneWorld
                 b.draw();
         }
 
-        float b = -100;
         public Vector3 getForces(Boid a)
         {
             Vector3 temp = new Vector3();
