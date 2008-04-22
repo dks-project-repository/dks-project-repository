@@ -201,7 +201,7 @@ namespace SceneWorld
             position.Y = Math.Min(Math.Max(position.Y, -2000), 2000);
             position.Z = Math.Min(Math.Max(position.Z, -2000), 2000);
 
-            if (scene.NavGraph.nodeAt(position) == null)
+            if (!(this is Boid) && scene.NavGraph.nodeAt(position) == null)
             {
                 position = scene.NavGraph.nextPosition(positionOld, position);
             }

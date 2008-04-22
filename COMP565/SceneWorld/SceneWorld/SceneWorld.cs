@@ -234,6 +234,7 @@ namespace SceneWorld
             // Avatar meshes do not have textures
             avatar = new Avatar(this, "Chaser", new Vector3(0, 0, 100),
                new Vector3(), 0.0f, "turret.x");
+            avatar.autoMove = false;
             drawable.Add(avatar);
             movable.Add(avatar);
             camera.Add(avatar.FirstPerson);
@@ -246,7 +247,7 @@ namespace SceneWorld
             camera.Add(npAvatar.FirstPerson);
             camera.Add(npAvatar.FollowCamera);
             camera.Add(npAvatar.TopCamera);
-            flock = new Flock(this, "flock", "ThemeBuilding.x", 45f, 30f, 30f);
+            flock = new Flock(this, "flock", "turret.x", 10, 15, .2f, .05f, 60, 5);
             
         }
 
@@ -487,6 +488,8 @@ namespace SceneWorld
             else if (kea.KeyCode == Keys.Z)
             {
                 avatar.autoMove = !avatar.autoMove;
+                if (!avatar.autoMove)
+                    avatar.clearPath();
             }
             /*  
             // We aren't using these in our assignment ... but there are here for interest

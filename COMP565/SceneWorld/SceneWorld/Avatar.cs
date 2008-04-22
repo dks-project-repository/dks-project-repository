@@ -102,6 +102,7 @@ namespace SceneWorld
         /* Stuff for automovement */
         public bool autoMove = true;
         protected List<Vector3> path = new List<Vector3>();
+        public void clearPath() { path.Clear(); }
         protected bool wander = false;
         protected int currStep = 0;
         protected IndexPair dest;
