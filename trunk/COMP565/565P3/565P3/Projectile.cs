@@ -57,9 +57,9 @@ namespace Game465P3
         public LobProjectile(World game, Model model, Avatar owner)
             : base(game, model, owner)
         {
-            velocity = owner.actualAt * Settings.velocityStraightProjectile + owner.velocity;
+            velocity = owner.actualAt * Settings.velocityLobProjectile + owner.velocity;
             acceleration = new Vector3(0, Settings.gravity, 0);
-            bounces = 2;
+            bounces = Settings.lobBounces;
         }
 
         public override bool handleCollision(Vector3 normal)
