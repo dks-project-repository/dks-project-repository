@@ -18,13 +18,14 @@ namespace Game465P3
             Vector3 v = owner.transform.Translation;
             v.Y += Settings.cameraHeight;
             transform.Translation = v;
+            skiing = true;
             game.add(this);
         }
 
-        public override void handleCollision(Vector3 velocBefore, Vector3 velocAfter)
+        public override bool handleCollision(Vector3 normal)
         {
-            Console.WriteLine("Projectile " + this.GetHashCode() + " removed.");
             game.remove(this);
+            return true;
         }
 
         public override void update()
@@ -35,7 +36,6 @@ namespace Game465P3
             game.terrain.edgeTest(transform.Translation, out x, out z);
             if (x != 0 || z != 0 || transform.Translation.Y > Settings.ceiling)
             {
-                Console.WriteLine("Projectile " + this.GetHashCode() + " removed.");
                 game.remove(this);
             }
         }
@@ -52,11 +52,28 @@ namespace Game465P3
 
     public class LobProjectile : Projectile
     {
+        private int bounces;
+
         public LobProjectile(World game, Model model, Avatar owner)
             : base(game, model, owner)
         {
             velocity = owner.actualAt * Settings.velocityStraightProjectile + owner.velocity;
             acceleration = new Vector3(0, Settings.gravity, 0);
+            bounces = 2;
+        }
+
+        public override bool handleCollision(Vector3 normal)
+        {
+            if (bounces > 0)
+            {
+                bounces--;
+                velocity = Object3D.rotate(normal, -velocity, MathHelper.Pi);
+                velocity *= 1 - Settings.frictionKinetic;
+                return false;
+            }
+
+            game.remove(this);
+            return true;
         }
     }
 }

@@ -200,11 +200,16 @@ namespace Game465P3
             dead = false;
         }
 
-        public override void handleCollision(Vector3 velocBefore, Vector3 velocAfter)
+        public override bool handleCollision(Vector3 normal)
         {
+            Vector3 oldVelocity = velocity;
+            velocity = Object3D.orthogonalize(velocity, normal);
+            if (oldVelocity.Length() > 2 * velocity.Length())
+                velocity *= 1 - (skiing ? Settings.frictionSki : Settings.frictionKinetic);
+
             if (!dead)
             {
-                float vaLen = velocAfter.Length(), vbLen = velocBefore.Length();
+                float vaLen = velocity.Length(), vbLen = oldVelocity.Length();
                 float velocDiff = (vbLen - vaLen);
                 if (velocDiff > Settings.damageMinSpeed)
                 {
@@ -214,6 +219,7 @@ namespace Game465P3
                     Health -= damage;
                 }
             }
+            return false;
         }
     }
 }

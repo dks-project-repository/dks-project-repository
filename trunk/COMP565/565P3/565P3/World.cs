@@ -196,6 +196,7 @@ namespace Game465P3
 
         public void add(Drawable d)
         {
+            Console.WriteLine(d.GetType().Name + " " + d.GetHashCode() + " added.");
             drawables.Add(d);
             if (d is Updatable)
                 updatables.Add((Updatable)d);
@@ -203,6 +204,7 @@ namespace Game465P3
 
         public void remove(Drawable d)
         {
+            Console.WriteLine(d.GetType().Name + " " + d.GetHashCode() + " removed.");
             toRemove.Add(d);
         }
     }

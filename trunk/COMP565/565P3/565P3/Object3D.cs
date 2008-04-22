@@ -20,14 +20,11 @@ namespace Game465P3
             transform.Translation = location;
         }
 
-        /*
-        public void rotate(Vector3 axes, ref Vector3 v1, ref Vector3 v2, float radians)
+        public static Vector3 rotate(Vector3 axes, Vector3 v1, float radians)
         {
             Quaternion q = Quaternion.CreateFromAxisAngle(axes, radians);
-            transform = Matrix.Transform(transform, q);
-            v1 = Vector3.Transform(v1, q);
-            v2 = Vector3.Transform(v2, q);
-        }*/
+            return Vector3.Transform(v1, q);
+        }
 
         public static Vector3 orthogonalize(Vector3 v, Vector3 normal)
         {
