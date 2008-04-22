@@ -60,7 +60,7 @@ namespace Game465P3
         {
             camera = new LinkedCamera(game, this);
 
-            location.Y = game.terrain.GetHeight(location) + .1f; // .1 beccause there's no collision if we start exactly on the terrain
+            location.Y = game.terrain.GetHeight(location) + Settings.collisionHeightDisplacement;
             transform.Translation = location;
             origLocation = location;
             update();
@@ -116,6 +116,27 @@ namespace Game465P3
                     new StraightProjectile(game, game.disc, this);
                 else if (t == typeof(LobProjectile))
                     new LobProjectile(game, game.lob, this);
+            }
+
+            if (game.input.IsKeyPressed(Keys.F8))
+            {
+                Vector3 w = transform.Translation;
+                Vector3 v = transform.Translation;
+                v.Y += 100;
+                Vector3 aAt = actualAt;
+                actualAt = Vector3.Normalize(Vector3.Down + aAt);
+                for (int i = -5; i < 5; i++)
+                {
+                    for (int j = -5; j < 5; j++)
+                    {
+                        v.X = w.X + i * 30;
+                        v.Z = w.Z + j * 30;
+                        transform.Translation = v;
+                        new LobProjectile(game, game.lob, this);
+                    }
+                }
+                transform.Translation = w;
+                actualAt = aAt;
             }
 
             // yaw is handled in Avatar's matrix

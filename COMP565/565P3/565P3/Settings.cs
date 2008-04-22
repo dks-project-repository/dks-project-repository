@@ -101,8 +101,9 @@ namespace Game465P3
         public const float damageSpeedMultiplier = .4f;
 
         // Projectiles
-        public const float velocityStraightProjectile = 4;
-        public const float velocityLobProjectile = .5f;
+        public const float velocityStraightProjectile = 3.33f;
+        public const float velocityLobProjectile = 2.5f;
+        public const int lobBounces = 3;
         public const float ceiling = 1000;
     }
 }
