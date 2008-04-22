@@ -79,12 +79,6 @@ namespace Game465P3
 
                 if (game.terrain.collider.PointIntersect(location, newLocation, out intersectDist, out intersectPos, out intersectNormal))
                 {
-                    // Collision!
-                    if (this is Projectile)
-                    {
-                        //((Projectile)this).
-                    }
-
                     // Subtract amount we traveled from TAL
                     float travelAmount = intersectDist / v;
                     travelAmountLeft -= travelAmount;
@@ -98,11 +92,8 @@ namespace Game465P3
                         location = newLocation;
                     }
 
-                    Vector3 oldVelocity = velocity;
-                    velocity = Object3D.orthogonalize(velocity, intersectNormal);
-                    if (oldVelocity.Length() > 2 * velocity.Length())
-                        velocity *= 1 - (skiing ? Settings.frictionSki : Settings.frictionKinetic);
-                    handleCollision(oldVelocity, velocity);
+                    if (handleCollision(intersectNormal))
+                        break;
                 }
                 else
                 {
@@ -129,6 +120,6 @@ namespace Game465P3
             transform.Translation = location;
         }
 
-        public abstract void handleCollision(Vector3 velocBefore, Vector3 velocAfter);
+        public abstract bool handleCollision(Vector3 normal);
     }
 }
