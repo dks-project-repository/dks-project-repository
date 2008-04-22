@@ -8,31 +8,28 @@ namespace SceneWorld
 {
     public class Flock
     {
-        List<Boid> boids;
-        private float cohesionWeight = 1;
-        private float directionWeight = 1;
-        private const float force = 10;
+        private List<Boid> boids;
+        private float forceWeight;
+        private float directionWeight;
+        private float avatarWeight;
+        private float crossoverRadius;
         private float blindspot;
-        private float cohesion;
-        private float repulsion;
         private Avatar avatar;
-        //private Vector3 location;
 
-
-
-        public Flock(SceneWorld sw, string label, string meshFile, float blindSpot, float cohesionRadius, float repulsionRadius)
+        public Flock(SceneWorld sw, string label, string meshFile, int numBoids, float blindspot, float forceWeight, float directionWeight, float crossoverRadius, float avatarWeight)
         {
             avatar = sw.avatar;
-            blindspot = blindSpot;
-            cohesion = cohesionRadius;
-            repulsion = repulsionRadius;
+            this.blindspot = blindspot;
+            this.forceWeight = forceWeight;
+            this.directionWeight = directionWeight;
+            this.avatarWeight = avatarWeight;
+            this.crossoverRadius = crossoverRadius;
             Random rand = new Random();
             boids = new List<Boid>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < numBoids; i++)
             {
-                Vector3 offset = new Vector3((float)rand.Next(), 0, (float)rand.Next());
-                Console.WriteLine(offset);
-                boids.Add(new Boid(sw, label + i, avatar.Location + offset, avatar.At, 0.0f, meshFile, this));
+                Vector3 blah = new Vector3((float)(rand.NextDouble() * 2 - 1), 0, (float)(rand.NextDouble() * 2 - 1));
+                boids.Add(new Boid(sw, label + i, avatar.Location + blah * crossoverRadius, avatar.Up, (float)rand.NextDouble(), meshFile, this));
             }
         }
 
@@ -41,26 +38,32 @@ namespace SceneWorld
         {
             foreach (Boid b in boids)
             {
-                b.At = cohesionWeight * (avatar.Location - b.Location) + directionWeight * b.At + b.getRepulsion() + b.getCohesion();
+                b.At = b.At + forceWeight * getForces(b) + directionWeight * getAverageDirection(b);
                 b.At = Vector3.Normalize(b.At);
                 b.Right = Vector3.Cross(b.Up, b.At);
+                b.Steps = 1;
+                b.move();
             }
         }
 
-        private Vector3 getAverageDirection(Boid a)
+        public Vector3 getAverageDirection(Boid a)
         {
             Vector3 temp = new Vector3();
             foreach (Boid b in boids)
-                if (a.isVisible(b))
+                if (a != b && a.isVisible(b))
                     temp += b.At;
             return Vector3.Scale(temp, 1f / boids.Count);
         }
 
-        public float CohesionWeight
+        public Vector3 getAverageLocation(Boid a)
         {
-            get { return cohesionWeight; }
-            set { cohesionWeight = value; }
+            Vector3 temp = avatar.Location * 10;
+            foreach (Boid b in boids)
+                if (a != b && a.isVisible(b))
+                    temp += b.Location;
+            return Vector3.Scale(temp, 1f / (boids.Count + 9));
         }
+
         public float DirectionWeight
         {
             get { return directionWeight; }
@@ -70,16 +73,6 @@ namespace SceneWorld
         {
             get { return blindspot; }
             set { blindspot = value; }
-        }
-        public float Cohesion
-        {
-            get { return cohesion; }
-            set { cohesion = value; }
-        }
-        public float Repulsion
-        {
-            get { return repulsion; }
-            set { repulsion = value; }
         }
 
         public Vector3 Location
@@ -93,10 +86,26 @@ namespace SceneWorld
                 b.draw();
         }
 
-
+        float b = -100;
+        public Vector3 getForces(Boid a)
+        {
+            Vector3 temp = new Vector3();
+            Vector3 diff;
+            foreach (Boid b in boids)
+            {
+                if (a != b && a.isVisible(b))
+                {
+                    diff = b.Location - a.Location;
+                    temp += Vector3.Normalize(diff) * (diff.Length() - crossoverRadius);
+                }
+            }
+            diff = Location - a.Location;
+            temp += Vector3.Normalize(diff) * (diff.Length() * avatarWeight - crossoverRadius);
+            return Vector3.Normalize(temp);
+        }
     }
 
-    class Boid : Avatar
+    public class Boid : MovableMesh3D
     {
         Flock flock;
 
@@ -113,22 +122,6 @@ namespace SceneWorld
             //? is it necessary for both vectors to be normalized?
             if (Vector3.Dot(At, Vector3.Normalize(b.Location - Location)) >= Math.Cos((double)180 - (flock.Blindspot / 2))) return true;
             return false;
-        }
-
-        public Vector3 getCohesion()
-        {
-            Vector3 temp = flock.Location - Location;
-            if (Vector3.Length(temp) <= flock.Cohesion)
-                return temp;
-            return new Vector3(0, 0, 0);
-        }
-
-        public Vector3 getRepulsion()
-        {
-            Vector3 temp = Location - flock.Location;
-            if (Vector3.Length(temp) <= flock.Repulsion)
-                return temp;
-            return new Vector3(0, 0, 0);
         }
     }
 }
