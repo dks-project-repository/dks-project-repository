@@ -19,6 +19,7 @@ namespace Game465P3
 
         protected List<Drawable> drawables;
         protected List<Updatable> updatables;
+        protected List<Drawable> toRemove;
 
         public Terrain terrain;
         public Avatar avatar;
@@ -39,6 +40,8 @@ namespace Game465P3
 
         public InputHandler input;
 
+        public Model disc, lob;
+
         public World(Game game, InputHandler input)
             : base(game)
         {
@@ -46,6 +49,7 @@ namespace Game465P3
 
             drawables = new List<Drawable>();
             updatables = new List<Updatable>();
+            toRemove = new List<Drawable>();
 
             Game.Window.ClientSizeChanged += Window_ClientSizeChanged;
 
@@ -104,6 +108,9 @@ namespace Game465P3
             arrow = Game.Content.Load<Texture2D>("arrow");
 
             minimap = new Minimap(Game, this.DrawOrder, input, terrain.drawTopDown, terrain.Width, terrain.Height);
+
+            disc = Game.Content.Load<Model>("disc");
+            lob = Game.Content.Load<Model>("lob");
         }
 
         protected override void OnVisibleChanged(object sender, EventArgs args)
@@ -148,6 +155,14 @@ namespace Game465P3
                 u.update();
             }
 
+            foreach (Drawable d in toRemove)
+            {
+                drawables.Remove(d);
+                if (d is Updatable)
+                    updatables.Remove((Updatable)d);
+            }
+            toRemove.Clear();
+
             currentCamera.update();
         }
 
@@ -177,6 +192,18 @@ namespace Game465P3
 #endif
                 spriteBatch.Draw(reticle, reticleRectangle, Settings.reticleColor);
             spriteBatch.End();
+        }
+
+        public void add(Drawable d)
+        {
+            drawables.Add(d);
+            if (d is Updatable)
+                updatables.Add((Updatable)d);
+        }
+
+        public void remove(Drawable d)
+        {
+            toRemove.Add(d);
         }
     }
 }

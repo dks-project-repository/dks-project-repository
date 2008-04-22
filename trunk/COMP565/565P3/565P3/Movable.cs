@@ -8,7 +8,7 @@ namespace Game465P3
 {
     public abstract class Movable : Drawable, Updatable
     {
-        protected Vector3 velocity;
+        public Vector3 velocity;
         public float Velocity { get { return velocity.Length(); } }
         protected Vector3 acceleration;
         protected Vector3 tractionForce;

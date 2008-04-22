@@ -51,6 +51,7 @@ namespace Game465P3
         public const Keys freeCameraSpeedUp = Keys.LeftShift;
         public const Keys toggleMouselook = Keys.Z;
         public const Keys killSelf = Keys.K;
+        public const Keys switchWeapon = Keys.E;
 
         public const Keys pause = Keys.P;
         public const Keys quit = Keys.Q;
@@ -66,6 +67,7 @@ namespace Game465P3
         public const Buttons zoomIn = Buttons.DPadUp;
         public const Buttons zoomOut = Buttons.DPadDown;
         public const Buttons fireButton = Buttons.RightTrigger;
+        public const Buttons switchWeaponButton = Buttons.Y;
 
         public const float thumbstickSensitivity = .0025f;
         public const float mouseSensitivity = .0025f;
@@ -93,10 +95,14 @@ namespace Game465P3
         public static readonly Color jetMeterColor = Color.RoyalBlue;
         public static readonly Color meterBackgroundColor = new Color(0, 0, 0, 127);
 
-
         // Avatar
         public const int deadMinTicks = 60;
         public const float damageMinSpeed = 90 / 60f;
         public const float damageSpeedMultiplier = .4f;
+
+        // Projectiles
+        public const float velocityStraightProjectile = 4;
+        public const float velocityLobProjectile = .5f;
+        public const float ceiling = 1000;
     }
 }

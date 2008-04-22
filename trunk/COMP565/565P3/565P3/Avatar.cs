@@ -15,6 +15,7 @@ namespace Game465P3
         public Vector3 actualAt;
         public float jetFuel = 1;
         public LinkedCamera camera;
+        protected LinkedList<Type> weapons;
 
         protected float health = 1;
         public float Health
@@ -63,6 +64,10 @@ namespace Game465P3
             transform.Translation = location;
             origLocation = location;
             update();
+
+            weapons = new LinkedList<Type>();
+            weapons.AddLast(typeof(StraightProjectile));
+            weapons.AddLast(typeof(LobProjectile));
         }
 
         public override void update()
@@ -88,6 +93,29 @@ namespace Game465P3
                 }
 
                 return;
+            }
+
+            // Switch weapons
+            if (game.input.IsKeyPressed(Settings.switchWeapon) || game.input.IsButtonPressed(Settings.switchWeaponButton))
+            {
+                Type t = weapons.First.Value;
+                weapons.RemoveFirst();
+                weapons.AddLast(t);
+            }
+
+
+            // Shooting
+#if XBOX360
+            if (game.input.IsButtonPressed(Settings.fireButton))
+#else
+            if (game.input.LeftMouseClick || game.input.IsButtonPressed(Settings.fireButton))
+#endif
+            {
+                Type t = weapons.First.Value;
+                if (t == typeof(StraightProjectile))
+                    new StraightProjectile(game, game.disc, this);
+                else if (t == typeof(LobProjectile))
+                    new LobProjectile(game, game.lob, this);
             }
 
             // yaw is handled in Avatar's matrix
