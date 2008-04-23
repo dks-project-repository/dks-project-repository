@@ -16,7 +16,7 @@ namespace Game465P3
             this.owner = owner;
             transform = Matrix.CreateWorld(Vector3.Zero, owner.actualAt, Vector3.Up);
             Vector3 v = owner.transform.Translation;
-            v.Y += Settings.cameraHeight;
+            v.Y += Settings.cameraHeight / 2;
             transform.Translation = v;
             skiing = true;
             game.add(this);
