@@ -61,6 +61,7 @@ namespace SceneWorld
         private bool fog = false;        // fog initially off
         private bool lighting = true;
         private bool spotlight = true;
+        private bool hilbertDraw = true;
         // Camera, view and infomation/trace display
         // fov, hither, and yon are used for perspective viewing.
         private float fov = (float)Math.PI / 4;
@@ -399,7 +400,11 @@ namespace SceneWorld
             foreach (IDrawable obj in drawable) obj.draw();
             foreach (MovableMesh3D mObj in movable) mObj.move();
             treasures.draw();
-            hilbert.draw();
+            if (hilbertDraw)
+            {
+                hilbert.draw();
+                navgraph.drawPath(hilbert.Path);
+            }
             flock.doFlock();
             flock.draw();
 
@@ -491,6 +496,10 @@ namespace SceneWorld
                 avatar.autoMove = !avatar.autoMove;
                 if (!avatar.autoMove)
                     avatar.clearPath();
+            }
+            else if (kea.KeyCode == Keys.H)
+            {
+                hilbertDraw = !hilbertDraw;
             }
             /*  
             // We aren't using these in our assignment ... but there are here for interest

@@ -88,7 +88,10 @@ namespace SceneWorld
             if (autoMove && !(this is NPAvatar))
                 automove();
             else
+            {
+                onPath = false;
                 base.move();
+            }
             updateCameras();
         }
 
@@ -110,12 +113,15 @@ namespace SceneWorld
         public bool findingPath = false;
         public int findingPathWaitCount = 0;
         public bool stopFindingPath = false;
+        protected int pathIndex = 0, pathDir = 1;
+        protected bool onPath = false;
 
         protected void automove()
         {
             if (++currStep == 12)
             {
                 currStep = 0;
+                pathIndex += pathDir;
                 //findPath();
                 lock (this)
                 {
@@ -151,28 +157,42 @@ namespace SceneWorld
                 }
             }
 
-            //base.move(); //TODO
-            //return;
             if (wander)
             {
-                base.move();
+                if (!onPath)
+                {
+                    pathIndex = scene.hilbert.closetIndexTo(location);
+                    onPath = true;
+                }
+                followPath(scene.hilbert.Path, pathIndex, ref pathDir);
             }
             else
             {
+                onPath = false;
                 followPath();
             }
         }
 
         protected void followPath()
         {
+            int dir = 42;
+            followPath(path, 0, ref dir);
+        }
+
+        public void followPath(List<Vector3> path, int index, ref int dir)
+        {
             lock (path)
             {
-                if (currStep == 0 && path.Count > 0)
+                if (dir == 42 && currStep == 0 && path.Count > 0)
                     path.RemoveAt(0);
 
-                if (path.Count >= 4)
+                if (dir > 0 && path.Count >= index + 4 || dir < 0 && index >= 3)
                 {
-                    Vector3 v = Vector3.CatmullRom(path[0], path[1], path[2], path[3], currStep / 12f);
+                    Vector3 v;
+                    if (dir > 0)
+                        v = Vector3.CatmullRom(path[index], path[index + 1], path[index + 2], path[index + 3], currStep / 12f);
+                    else
+                        v = Vector3.CatmullRom(path[index], path[index - 1], path[index - 2], path[index - 3], currStep / 12f);
                     Vector3 newAt = v - location;
                     if (newAt.LengthSq() != 0)
                     {
@@ -184,8 +204,13 @@ namespace SceneWorld
                 else
                 {
                     // we ran out of path
-                    path.Clear();
-                    wander = true;
+                    if (dir == 42)
+                    {
+                        path.Clear();
+                        wander = true;
+                    }
+                    else
+                        dir = -dir;
                 }
             }
         }
@@ -283,7 +308,8 @@ namespace SceneWorld
                     path.Clear();
                     return;
                 }
-                else*/ if (curr.Equals(dest))
+                else*/
+                if (curr.Equals(dest))
                 {
                     // we now have a path
 
