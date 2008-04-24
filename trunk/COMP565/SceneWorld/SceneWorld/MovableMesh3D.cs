@@ -196,14 +196,17 @@ namespace SceneWorld
                 steps = -1;
             }
 
-            // Stay on map
-            position.X = Math.Min(Math.Max(position.X, -2000), 2000);
-            position.Y = Math.Min(Math.Max(position.Y, -2000), 2000);
-            position.Z = Math.Min(Math.Max(position.Z, -2000), 2000);
-
-            if (!(this is Boid) && scene.NavGraph.nodeAt(position) == null)
+            if (!(this is Boid))
             {
-                position = scene.NavGraph.nextPosition(positionOld, position);
+                // Stay on map
+                position.X = Math.Min(Math.Max(position.X, -2000), 2000);
+                position.Y = Math.Min(Math.Max(position.Y, -2000), 2000);
+                position.Z = Math.Min(Math.Max(position.Z, -2000), 2000);
+
+                if (scene.NavGraph.nodeAt(position) == null)
+                {
+                    position = scene.NavGraph.nextPosition(positionOld, position);
+                }
             }
 
             // update properties and cameras

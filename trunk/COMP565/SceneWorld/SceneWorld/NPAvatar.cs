@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
@@ -10,6 +11,10 @@ namespace SceneWorld
     {
         private int remoteX, remoteY, remoteTurns = 0;
         private Vector3 oldPos;
+        public Vector3 rightFeeler, leftFeeler;
+        Mesh tp;
+        Material tpm;
+        Matrix mr, ml;
 
         // Constructor
 
@@ -20,6 +25,11 @@ namespace SceneWorld
             firstPerson.Name = "npFirst ";
             follow.Name = "npFollow";
             top.Name = "npTop";
+            tp = Mesh.Teapot(sw.Display);
+            tpm = new Material();
+            tpm.Emissive = Color.SeaShell;
+            mr = Matrix.RotationY(-45);
+            ml = Matrix.RotationY(45);
         }
 
         // Methods 
@@ -33,16 +43,12 @@ namespace SceneWorld
             Avatar player = scene.avatar;
             Vector3 distance = Location - player.Location;
             IndexPair treasure = null;
-            Vector3 posChange = Location - oldPos;
             oldPos = Location;
 
             if (distance.Length() < 500 && distance.LengthSq() != 0)
             {
                 path.Clear();
-
-                if (posChange.Length() < .9f)
-                    collisionTurn();
-                else
+                if (!collisionTurn())
                 {
                     yaw = 0;
                     At = Vector3.Normalize(distance);
@@ -69,13 +75,14 @@ namespace SceneWorld
                 }
 
                 followPath();
+                updateCameras();
             }
             if (path.Count == 0)
             {
                 remoteTurns++;
-                if (posChange.Length() < .9f)
-                    collisionTurn();
-                else
+                //if (posChange.Length() < .9f)
+
+                if (!collisionTurn())
                 {
                     if (remoteTurns > 25)
                     {
@@ -90,24 +97,39 @@ namespace SceneWorld
             }// now use MovableMesh's move via Avatar's move();
         }
 
-        private void collisionTurn()
+        private bool collisionTurn()
         {
-            steps = 1;
-            int dir = NavGraph.directionFromVector(At);
-            IndexPair loc = NavGraph.indexFromLocation(Location);
-            for (int i = 1; i <= 3; i++)
+            //TODO: use quaternions
+            rightFeeler = Vector3.TransformNormal(At, mr) * 10;
+            leftFeeler = Vector3.TransformNormal(At, ml) * 10;
+            bool left = scene.NavGraph.isTraversable(NavGraph.indexFromLocation(Location + rightFeeler));
+            bool right = scene.NavGraph.isTraversable(NavGraph.indexFromLocation(Location + leftFeeler));
+            bool fwd = scene.NavGraph.isTraversable(NavGraph.indexFromLocation(Location + At * 10));
+            if (left && !right)
+                yaw = 1;
+            if (right && !left)
+                yaw = -1;
+            if (right && left)
             {
-                if (scene.NavGraph.isTraversable(NavGraph.indexAt(loc, NavGraph.checkDir(dir - i))))
-                {
+                if (fwd)
+                    yaw = 0;
+                else
                     yaw = -1;
-                    break;
-                }
-                else if (scene.NavGraph.isTraversable(NavGraph.indexAt(loc, NavGraph.checkDir(dir + i))))
-                {
-                    yaw = 1;
-                    break;
-                }
             }
+            return !right || !left;
+        }
+
+        public override void draw()
+        {
+            base.draw();
+            Matrix temp = display.Transform.World;  // save Transform state
+            display.Transform.World = orientation * Matrix.Translation(rightFeeler);
+            display.SetTexture(0, null);
+            display.Material = tpm;
+            tp.DrawSubset(0);
+            display.Transform.World = orientation * Matrix.Translation(leftFeeler);
+            tp.DrawSubset(0);
+            display.Transform.World = temp; // restore Transform state
         }
     }
 }

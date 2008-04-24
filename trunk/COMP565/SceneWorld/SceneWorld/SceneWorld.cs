@@ -402,6 +402,7 @@ namespace SceneWorld
             hilbert.draw();
             flock.doFlock();
             flock.draw();
+
             ShowText();
 
             display.EndScene();
