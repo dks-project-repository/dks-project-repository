@@ -10,12 +10,13 @@ namespace SceneWorld
     public class HilbertCurve : IDisposable
     {
         private List<Vector3> curve;
+        private List<Vector3> path;
         private VertexBuffer vb;
         private Vector3 curr;
         private Vector3 offset;
         private float dist;
 
-        public List<Vector3> Curve { get { return curve; } }
+        public List<Vector3> Path { get { return path; } }
 
         // Drawing stuff
         private Mesh mesh;
@@ -53,6 +54,7 @@ namespace SceneWorld
 
 
             adjustToTraversables(navgraph);
+            createPath(navgraph);
 
             vb = new VertexBuffer(typeof(CustomVertex.PositionOnly), curve.Count, device, Usage.None, VertexFormats.Position, Pool.Managed);
 
@@ -152,9 +154,9 @@ namespace SceneWorld
         {
             float minDistSq = float.PositiveInfinity;
             int closestIndex = -1;
-            for (int i = 0; i < curve.Count; i++)
+            for (int i = 0; i < path.Count; i++)
             {
-                float distSq = (curve[i] - v).LengthSq();
+                float distSq = (path[i] - v).LengthSq();
                 if (distSq < minDistSq)
                 {
                     closestIndex = i;
@@ -162,6 +164,94 @@ namespace SceneWorld
                 }
             }
             return closestIndex;
+        }
+
+        private void createPath(NavGraph n)
+        {
+            path = new List<Vector3>();
+            IndexPair source, dest;
+            dest = NavGraph.indexFromLocation(curve[0]);
+            for (int i = 1; i < curve.Count; i++)
+            {
+                Console.WriteLine("AStar: Hilbert " + i + " / " + (curve.Count - 1));
+                source = dest;
+                dest = NavGraph.indexFromLocation(curve[i]);
+                AStar(source, dest, n);
+                path.RemoveAt(path.Count - 1);
+            }
+        }
+
+        private IndexPair AStar(IndexPair curr, IndexPair dest, NavGraph navgraph)
+        {            
+            SortedList<IndexPair, bool> open = new SortedList<IndexPair, bool>(new IndexPair.Comparer());
+            SortedList<IndexPair, bool> closed = new SortedList<IndexPair, bool>(new IndexPair.Comparer());
+            List<Vector3> path = new List<Vector3>();
+
+            IndexPair next;
+            curr.pathPredecessor = null;
+            curr.cost = 0;
+            IndexPair source = curr;
+            open.Add(curr, true);
+
+            float maxDist = IndexPair.dist(source, dest) * 1.5f;
+
+            while (open.Count > 0)
+            {
+                // get first indexpair in the list
+                curr = open.Keys[0];
+                if (curr.Equals(dest))
+                {
+                    // we now have a path
+
+                    // stick it in a list
+                    curr.backtrack(this.path);
+                    return curr;
+                }
+                else
+                {
+                    // keeping looking
+                    open.RemoveAt(0);
+                    closed.Add(curr, true);
+                    int nextDir = curr.dir - 1;
+                    if (nextDir < 0)
+                        nextDir += 8;
+                    int nodesAdded = 0;
+                    int maxIndex = 8;
+                    for (int i = 0; i < maxIndex; i++)
+                    {
+                        next = NavGraph.indexAt(curr, nextDir);
+                        if (navgraph.isTraversable(next))
+                        {
+
+                            // source cost
+                            next.cost = next.sourceCost = curr.sourceCost +
+                                    (nextDir % 2 == 0 ? 1 : 1.41421356237f);
+
+                            // heuristic
+                            float destCost = IndexPair.dist(dest, next);
+                            if (destCost > maxDist)
+                                continue;
+                            next.cost += destCost;
+                            if (!open.ContainsKey(next) && !closed.ContainsKey(next))
+                            {
+                                open.Add(next, true);
+                                nodesAdded++;
+                            }
+                        }
+
+                        nextDir++;
+                        if (nextDir >= 8)
+                            nextDir -= 8;
+
+                        if (i == 2 && nodesAdded == 0)
+                        {
+                            // If stuck, allow to go other directions
+                            maxIndex = 8;
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 }
