@@ -14,6 +14,7 @@ namespace Game465P3
         public const float FOVdegrees = 90;
         public const int initWidth = 1024;
         public const int initHeight = 576;
+        public const int octreeDepth = 0;
 
         public static readonly float[] timeMultipliers = { 0.25f, 0.5f, 1, 2, 4, 8, 16, 32 };
         public const int timeMultiplierDefaultIndex = 2;
