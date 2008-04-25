@@ -27,6 +27,8 @@ namespace SceneWorld
         protected int nodeDir, nextNodeDir, numStepsToNode, currStepToNode;
         protected Vector3 hermitePos1, hermiteTan1, hermitePos2, hermiteTan2;
 
+        protected int treasureCount;
+
         // Constructors and initialize method
 
         public void initialize()
@@ -135,6 +137,17 @@ namespace SceneWorld
             {
                 move2();
                 return;
+            }
+            IndexPair temp;
+            if ((temp = scene.Treasures.treasureWithin(Location, 10)) != null)
+            {
+                treasureCount++;
+                if (name.ToLower().Equals("chaser"))
+                    Trace = "Chaser collects a treasure: " + treasureCount + " Collected out of 4";
+                else
+                    Trace = "Evader collects a treasure: " + treasureCount + " Collected out of 4";
+                
+                scene.Treasures.collectTreasure(temp);
             }
 
             // need temporary vectors since Properties can't be passed as ref arguments

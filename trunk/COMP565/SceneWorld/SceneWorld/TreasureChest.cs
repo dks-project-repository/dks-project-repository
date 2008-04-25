@@ -7,9 +7,10 @@ namespace SceneWorld
 {
     public class TreasureChest
     {
+        private Dictionary<IndexPair, ModeledMesh3D> meshes;
         private List<IndexPair> treasures;
         private List<IndexPair> collectedTreasures;
-        private static Mesh mesh;
+        private MeshData mesh;
         private static Material mat;
         private static Matrix matrix;
         private Device device;
@@ -19,7 +20,9 @@ namespace SceneWorld
             device = scene.Display;
             matrix = Matrix.RotationX((float)-Math.PI / 2f) * Matrix.Translation(-2000, 10, -2000);
 
-            mesh = Mesh.Sphere(device, 10, 8, 8);
+            mesh = new MeshData(scene.Display, "treasure.x");
+            meshes = new Dictionary<IndexPair, ModeledMesh3D>();
+
             mat = new Material();
             mat.Emissive = System.Drawing.Color.White;
 
@@ -47,8 +50,15 @@ namespace SceneWorld
                         }
                     }
                 }
+                meshes.Add(ip, new ModeledMesh3D(scene, "treasure", mesh));
                 treasures.Add(ip);
             }
+        }
+
+        public void collectTreasure(IndexPair ip)
+        {
+            treasures.Remove(ip);
+            collectedTreasures.Add(ip);
         }
 
         public IndexPair treasureWithin(Vector3 v, float dist)
@@ -70,7 +80,8 @@ namespace SceneWorld
             foreach (IndexPair ip in treasures)
             {
                 device.Transform.World = matrix * Matrix.Translation(ip.x * 10, 0, ip.z * 10);
-                mesh.DrawSubset(0);
+                meshes[ip].Location = NavGraph.locationFromIndex(ip);
+                meshes[ip].draw();
             }
             device.Transform.World = temp; // restore Transform state
         }
