@@ -15,8 +15,10 @@ namespace Game465P3
         {
             this.owner = owner;
             transform = Matrix.CreateWorld(Vector3.Zero, owner.actualAt, Vector3.Up);
-            Vector3 v = owner.transform.Translation;
+            Vector3 v = owner.transform.Translation + owner.actualAt * (bounds.Max - bounds.Min).Length() * 1.25f;
             v.Y += Settings.cameraHeight / 2;
+            if (game.terrain.onGround(v))
+                v.Y = game.terrain.GetHeight(v) + Settings.collisionHeightAboveTerrain;
             transform.Translation = v;
             skiing = true;
             game.add(this);
@@ -24,15 +26,29 @@ namespace Game465P3
 
         public override bool handleCollision(Vector3 normal)
         {
-            Vector3 aDiff = game.avatar.transform.Translation - transform.Translation;
-            float aDist = aDiff.Length();
-            if (aDist < Settings.explosionRadius)
+            BoundingBox b = BoundingBox.CreateFromSphere(new BoundingSphere(transform.Translation, Settings.explosionRadius));
+            foreach (Avatar a in game.oct.getAllWithin<Avatar>(b))
             {
-                float damage = (Settings.explosionRadius - aDist) / Settings.explosionRadius * Settings.explosionDamage;
-                if (aDist != 0)
-                    game.avatar.velocity += Vector3.Normalize(aDiff) * damage * Settings.explosionAccel;
-                game.avatar.Health -= damage;
+                Vector3 aDiff = a.transform.Translation - transform.Translation;
+                float aDist = aDiff.Length();
+                if (aDist < Settings.explosionRadius)
+                {
+                    float damage = (Settings.explosionRadius - aDist) / Settings.explosionRadius * Settings.explosionDamage;
+                    if (aDist != 0)
+                        a.velocity += Vector3.Normalize(aDiff) * damage * Settings.explosionAccel;
+                    a.Health -= damage;
+                }
             }
+
+            //Vector3 aDiff = game.avatar.transform.Translation - transform.Translation;
+            //float aDist = aDiff.Length();
+            //if (aDist < Settings.explosionRadius)
+            //{
+            //    float damage = (Settings.explosionRadius - aDist) / Settings.explosionRadius * Settings.explosionDamage;
+            //    if (aDist != 0)
+            //        game.avatar.velocity += Vector3.Normalize(aDiff) * damage * Settings.explosionAccel;
+            //    game.avatar.Health -= damage;
+            //}
 
             game.remove(this);
             return true;
@@ -40,7 +56,17 @@ namespace Game465P3
 
         public override void update()
         {
+            Vector3 oldPos = transform.Translation;
+            
             base.update();
+
+            Avatar a = game.oct.intersection<Avatar>(oldPos, transform.Translation);
+            if (a != null)
+            {
+                transform.Translation = a.transform.Translation;
+                handleCollision(Vector3.Zero);
+                return;
+            }
 
             int x, z;
             game.terrain.edgeTest(transform.Translation, out x, out z);
@@ -74,7 +100,7 @@ namespace Game465P3
 
         public override bool handleCollision(Vector3 normal)
         {
-            if (bounces > 0)
+            if (bounces > 0 && normal != Vector3.Zero)
             {
                 bounces--;
                 velocity = Object3D.rotate(normal, -velocity, MathHelper.Pi);

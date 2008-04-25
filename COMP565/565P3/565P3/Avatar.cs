@@ -38,6 +38,8 @@ namespace Game465P3
                         deadCounter = 0;
                         game.setDamage(1);
                         acceleration = -gravity;
+                        tractionForce = Vector3.Zero;
+                        game.oct.Remove(this);
                     }
                     else
                     {
@@ -66,8 +68,9 @@ namespace Game465P3
 
             location.Y = game.terrain.GetHeight(location) + Settings.collisionHeightDisplacement;
             transform.Translation = location;
-            origLocation = location;
             update();
+            createBoundingBox();
+            origLocation = transform.Translation;
 
             weapons = new LinkedList<Type>();
             weapons.AddLast(typeof(StraightProjectile));
@@ -121,6 +124,7 @@ namespace Game465P3
                     new LobProjectile(game, game.lob, this);
             }
 
+            // TODO: eventually remove this testing code
             if (game.input.IsKeyPressed(Keys.F8))
             {
                 Vector3 w = transform.Translation;
@@ -219,6 +223,8 @@ namespace Game465P3
         {
             yaw = pitch = MathHelper.PiOver2;
             transform.Translation = origLocation;
+            createBoundingBox();
+            game.oct.Add(this);
             velocity = Vector3.Zero;
             camera.zoom = camera.targetZoom;
             game.setDamage(0);

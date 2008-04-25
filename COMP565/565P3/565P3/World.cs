@@ -40,6 +40,8 @@ namespace Game465P3
 
         public InputHandler input;
 
+        public Octree oct;
+
         public Model disc, lob;
 
         public World(Game game, InputHandler input)
@@ -92,8 +94,11 @@ namespace Game465P3
             terrain = new Terrain(this, Vector3.Zero, Game.Content.Load<Model>("terrain"));
             drawables.Add(terrain);
 
+            oct = new Octree(terrain.Width, Settings.ceiling * 2, terrain.Height, Settings.octreeDepth);
+
             avatar = new Avatar(this, Vector3.Zero, Game.Content.Load<Model>("turret"));
             drawables.Add(avatar);
+            oct.Add(avatar);
 
             health = new LinearMeter(this, new Rectangle(40, 5, 200, 20),
                 Settings.healthMeterColor, Settings.meterBackgroundColor, 1, avatar.getHealth);

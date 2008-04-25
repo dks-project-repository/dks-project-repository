@@ -22,6 +22,8 @@ namespace Game465P3
 
         public virtual void update()
         {
+            // N.B. DO NOT modify transform.Translation of a movable outside of this method. It will break the bounding box.
+
             // Calculate velocity
             velocity += acceleration;
             float v = velocity.Length();
@@ -117,6 +119,7 @@ namespace Game465P3
             if ((x != 0 || z != 0) && game.terrain.onGround(location) || terrainY > location.Y)
                 location.Y = terrainY;
 
+            game.oct.Move(this, location - transform.Translation);
             transform.Translation = location;
         }
 
