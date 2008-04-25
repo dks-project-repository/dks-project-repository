@@ -24,6 +24,16 @@ namespace Game465P3
 
         public override bool handleCollision(Vector3 normal)
         {
+            Vector3 aDiff = game.avatar.transform.Translation - transform.Translation;
+            float aDist = aDiff.Length();
+            if (aDist < Settings.explosionRadius)
+            {
+                float damage = (Settings.explosionRadius - aDist) / Settings.explosionRadius * Settings.explosionDamage;
+                if (aDist != 0)
+                    game.avatar.velocity += Vector3.Normalize(aDiff) * damage * Settings.explosionAccel;
+                game.avatar.Health -= damage;
+            }
+
             game.remove(this);
             return true;
         }
@@ -72,8 +82,7 @@ namespace Game465P3
                 return false;
             }
 
-            game.remove(this);
-            return true;
+            return base.handleCollision(normal);
         }
     }
 }

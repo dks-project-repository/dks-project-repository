@@ -53,7 +53,7 @@ namespace Game465P3
                 return;
             }
 
-            int a = (int)(damage * 255 + 30);
+            int a = (int)(damage * 255 + 30) + alpha;
             alpha = (byte)(a < 255 ? a : 255);
         }
 

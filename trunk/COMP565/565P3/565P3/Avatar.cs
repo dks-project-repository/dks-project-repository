@@ -14,6 +14,7 @@ namespace Game465P3
         public float yaw = MathHelper.PiOver2, pitch = MathHelper.PiOver2;
         public Vector3 actualAt;
         public float jetFuel = 1;
+        protected bool jetting = false;
         public LinkedCamera camera;
         protected LinkedList<Type> weapons;
 
@@ -36,10 +37,12 @@ namespace Game465P3
                         dead = true;
                         deadCounter = 0;
                         game.setDamage(1);
-                        acceleration = new Vector3(0, Settings.gravity, 0);
                     }
                     else
+                    {
+                        game.setDamage(health - value);
                         health = value;
+                    }
                 }
             }
         }
@@ -72,21 +75,18 @@ namespace Game465P3
 
         public override void update()
         {
-            if (game.input.IsKeyPressed(Settings.killSelf))
-                Health = 0;
-
             if (dead)
             {
                 actualAt = game.input.handleRotation(ref yaw, ref pitch);
                 camera.zoom = Settings.minZoom * 3;
 
                 base.update();
-                deadCounter++;
+                acceleration = -gravity;
 
 #if XBOX360
-                if (deadCounter > Settings.deadMinTicks && game.input.IsButtonPressed(Settings.fireButton))
+                if (++deadCounter > Settings.deadMinTicks && game.input.IsButtonPressed(Settings.fireButton))
 #else
-                if (deadCounter > Settings.deadMinTicks && game.input.LeftMouseClick)
+                if (++deadCounter > Settings.deadMinTicks && game.input.LeftMouseClick)
 #endif
                 {
                     respawn();
@@ -94,6 +94,9 @@ namespace Game465P3
 
                 return;
             }
+
+            if (game.input.IsKeyPressed(Settings.killSelf))
+                Health = 0;
 
             // Switch weapons
             if (game.input.IsKeyPressed(Settings.switchWeapon) || game.input.IsButtonPressed(Settings.switchWeaponButton))
@@ -125,12 +128,13 @@ namespace Game465P3
                 v.Y += 100;
                 Vector3 aAt = actualAt;
                 actualAt = Vector3.Normalize(Vector3.Down + aAt);
+                Random r = new Random();
                 for (int i = -5; i < 5; i++)
                 {
                     for (int j = -5; j < 5; j++)
                     {
-                        v.X = w.X + i * 30;
-                        v.Z = w.Z + j * 30;
+                        v.X = w.X + (float)r.NextDouble() * 300 - 150;
+                        v.Z = w.Z + (float)r.NextDouble() * 300 - 150;
                         transform.Translation = v;
                         new LobProjectile(game, game.lob, this);
                     }
@@ -149,11 +153,12 @@ namespace Game465P3
             Vector3 translation = game.input.handleTranslation(transform.Forward);
             acceleration = new Vector3(0, Settings.gravity, 0);
 #if XBOX360
-            if (game.input.IsButtonDown(Settings.jet) && jetFuel > Settings.jetExpend)
+            if (game.input.IsButtonDown(Settings.jet) && (jetting && jetFuel > Settings.jetExpend || jetFuel > Settings.jetMinFuel))
 #else
-            if ((game.input.RightMouseDown || game.input.IsButtonDown(Settings.jet)) && jetFuel > Settings.jetExpend)
+            if ((game.input.RightMouseDown || game.input.IsButtonDown(Settings.jet)) && (jetting && jetFuel > Settings.jetExpend || jetFuel > Settings.jetMinFuel))
 #endif
             {
+                jetting = true;
                 jetFuel -= Settings.jetExpend;
 
                 if (translation == Vector3.Zero)
@@ -172,6 +177,7 @@ namespace Game465P3
             }
             else
             {
+                jetting = false;
                 jetFuel += Settings.jetRefuel;
             }
             jetFuel = MathHelper.Clamp(jetFuel, 0, 1);
@@ -236,7 +242,6 @@ namespace Game465P3
                 {
                     velocDiff -= Settings.damageMinSpeed;
                     float damage = velocDiff * velocDiff * Settings.damageSpeedMultiplier;
-                    game.setDamage(damage);
                     Health -= damage;
                 }
             }
