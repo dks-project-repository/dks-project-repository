@@ -37,6 +37,7 @@ namespace Game465P3
                         dead = true;
                         deadCounter = 0;
                         game.setDamage(1);
+                        acceleration = -gravity;
                     }
                     else
                     {
@@ -81,7 +82,6 @@ namespace Game465P3
                 camera.zoom = Settings.minZoom * 3;
 
                 base.update();
-                acceleration = -gravity;
 
 #if XBOX360
                 if (++deadCounter > Settings.deadMinTicks && game.input.IsButtonPressed(Settings.fireButton))
