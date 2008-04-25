@@ -26,6 +26,7 @@ namespace Game465P3
 
         public const float jetExpend = 1 / 180f;
         public const float jetRefuel = 1 / 300f;
+        public const float jetMinFuel = 1 / 16f;
 
         public const float skiStrafeProportion = .005f;
         public const float walkSpeed = .2f;
@@ -104,6 +105,9 @@ namespace Game465P3
         public const float velocityStraightProjectile = 3.33f;
         public const float velocityLobProjectile = 2.5f;
         public const int lobBounces = 3;
+        public const float explosionRadius = 5;
+        public const float explosionDamage = .4f;
+        public const float explosionAccel = 5f;
         public const float ceiling = 1000;
     }
 }
