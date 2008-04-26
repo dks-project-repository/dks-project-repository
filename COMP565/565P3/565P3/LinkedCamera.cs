@@ -8,8 +8,14 @@ namespace Game465P3
     public class LinkedCamera : Camera, IDisposable
     {
         public Object3D target;
+
         public float zoom;
         public float targetZoom;
+
+        public float FOV = Settings.FOVdegrees;
+        public float prevFOV = Settings.FOVdegrees;
+        public float targetFOV = Settings.FOVdegrees;
+        public int FOVindex = 0;
 
         public LinkedCamera(World g, Object3D t)
             : base(g)
@@ -29,6 +35,37 @@ namespace Game465P3
             }
             else
             {
+                // First person zoom
+                if (game.input.IsKeyPressed(Settings.changeFOV))
+                {
+                    FOVindex++;
+                    if (FOVindex >= Settings.FOVdividers.Length)
+                        FOVindex = 0;
+                    //prevFOV = targetFOV;
+                }
+                if (game.input.IsKeyDown(Settings.FOVzoom) && targetZoom <= Settings.minZoom)
+                {
+                    targetFOV = Settings.FOVdegrees / Settings.FOVdividers[FOVindex];
+                }
+                else
+                {
+                    targetFOV = Settings.FOVdegrees;
+                }
+                if (FOV == targetFOV)
+                    prevFOV = targetFOV;
+                else if (FOV < targetFOV && FOV < prevFOV || FOV > targetFOV && FOV > prevFOV)
+                    prevFOV = FOV;
+                if (FOV != targetFOV)
+                {
+                    int dir = Math.Sign(targetFOV - FOV);
+                    FOV += (targetFOV - prevFOV) / Settings.FOVchangeFrames;
+                    if (dir > 0 && FOV > targetFOV || dir < 0 && FOV < targetFOV)
+                        FOV = targetFOV;
+                    game.createProjection(FOV);
+                }
+
+
+                // Third person zoom
 #if XBOX360
                 if (game.input.IsButtonPressed(Settings.zoomIn))
                     targetZoom /= Settings.zoomMultiplier;
@@ -50,7 +87,6 @@ namespace Game465P3
                     else
                         zoom += (targetZoom - zoom) / 8f;
                 }
-
 
                 Avatar a = (Avatar)target;
                 a.update();
@@ -85,6 +121,9 @@ namespace Game465P3
         {
             if (target is Drawable)
                 ((Drawable)target).IsDrawn = true;
+
+            targetFOV = FOV = Settings.FOVdegrees;
+            game.createProjection(FOV);
         }
     }
 }

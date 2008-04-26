@@ -51,18 +51,20 @@ namespace Game465P3
         public const Keys rotateRight = Keys.Right;
         public const Keys ski = Keys.Space;
         public const Keys freeCameraSpeedUp = Keys.LeftShift;
-        public const Keys toggleMouselook = Keys.Z;
+        public const Keys toggleMouselook = Keys.M;
         public const Keys killSelf = Keys.K;
-        public const Keys switchWeapon = Keys.E;
+        public const Keys switchWeapon = Keys.Q;
 
         public const Keys pause = Keys.P;
-        public const Keys quit = Keys.Q;
-        public const Keys switchCamera = Keys.X;
+        public const Keys quit = Keys.Escape;
+        public const Keys switchCamera = Keys.O;
         public const Keys uncapFPS = Keys.U;
         public const Keys timeSpeedUp = Keys.OemPlus;
         public const Keys timeSlowDown = Keys.OemMinus;
         public const Keys showMap = Keys.C;
         public const Keys drawBoundingBoxes = Keys.B;
+        public const Keys changeFOV = Keys.Z;
+        public const Keys FOVzoom = Keys.E;
 
         public const Buttons jet = Buttons.RightShoulder;
         public const Buttons skiButton = Buttons.LeftShoulder;
@@ -80,6 +82,9 @@ namespace Game465P3
         public const float zoomMultiplier = 1.4f;
         public const float minZoom = 10;
         public const float maxZoom = 5976;
+
+        public const int FOVchangeFrames = 15;
+        public static readonly int[] FOVdividers = { 2, 5, 10, 20 };
 
         public const float cameraHeight = 2;
         public const float freeCameraSpeed = .5f;

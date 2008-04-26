@@ -73,9 +73,13 @@ namespace Game465P3
 
         protected void Window_ClientSizeChanged(object o, EventArgs args)
         {
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(Settings.FOVdegrees), GraphicsDevice.Viewport.AspectRatio, Settings.hither, Settings.yon);
-
+            createProjection(Settings.FOVdegrees);
             reticleRectangle = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 8, GraphicsDevice.Viewport.Height / 2 - 8, 16, 16);
+        }
+
+        public void createProjection(float FOV)
+        {
+            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(FOV), GraphicsDevice.Viewport.AspectRatio, Settings.hither, Settings.yon);
         }
 
         public override void Initialize()
