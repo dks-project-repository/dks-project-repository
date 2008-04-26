@@ -31,6 +31,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ModelBoundsPipeline\ModelBoundsPipeline.csproj">
+      <Project>{0606D533-74B3-4570-8F19-320252EF37B4}</Project>
+      <Name>ModelBoundsPipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\TankOnAHeightmapPipeline\TankOnAHeightmapPipeline.csproj">
       <Project>{287934F7-D1DF-4E3E-A05E-505C500113DC}</Project>
       <Name>TankOnAHeightmapPipeline</Name>
@@ -59,13 +63,13 @@
       <Link>disc.x</Link>
       <Name>disc</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
     <Compile Include="..\..\565P3\Content\lob.x">
       <Link>lob.x</Link>
       <Name>lob</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
     <None Include="..\..\565P3\Content\rocks.bmp">
       <Link>rocks.bmp</Link>
@@ -86,7 +90,7 @@
       <Link>axes.x</Link>
       <Name>axes</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
     <Compile Include="..\..\565P3\Content\Lindsey.spritefont">
       <Link>Lindsey.spritefont</Link>
@@ -104,7 +108,7 @@
       <Link>turret.x</Link>
       <Name>turret</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

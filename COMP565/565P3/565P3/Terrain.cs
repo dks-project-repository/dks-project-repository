@@ -100,8 +100,6 @@ namespace Game465P3
             p += map.Position;
         }
 
-        // TODO: delete everything below this line
-
         // Sets x/z to -1 if on min edge, 1 if on max edge, 0 otherwise
         public void edgeTest(Vector3 pos, out int x, out int z)
         {
@@ -124,185 +122,11 @@ namespace Game465P3
                 z = 0;
         }
 
-        // Figure out where a line intersects the heightmap
-        public Vector3? intersection(Vector3 start, Vector3 end)
-        {
-            Ray ray = new Ray(start, Vector3.Normalize(end - start));
 
-            foreach (Vector3[] triangle in trianglesBelowSegment(start, end))
-            {
-                // See if given triangle intersects with ray
-                Vector3? intersection = triangleRayIntersection(triangle, ray);
-                if (intersection != null)
-                {
-                    // intersection! yay.
-                    return intersection;
-                }
-            }
-
-            return null;
-        }
-
-        private static bool isBetween(float number, float endpoint1, float endpoint2)
-        {
-            if (endpoint1 < endpoint2)
-                return number >= endpoint1 && number <= endpoint2;
-            return number >= endpoint2 && number <= endpoint1;
-        }
-
-        // Enumerable list of sets of 3 vertices that form triangles on the heightmap that share x/z with the given line
-        public IEnumerable<Vector3[]> trianglesBelowSegment(Vector3 start, Vector3 end)
-        {
-            // Convert to map origin
-            start -= map.Position;
-            end -= map.Position;
-
-            // First get the quad we're currently in
-            float x0 = start.X - (start.X % map.TerrainScale);
-            float x1 = x0 + map.TerrainScale;
-            float z0 = start.Z - (start.Z % map.TerrainScale);
-            float z1 = z0 + map.TerrainScale;
-
-            Vector3 direction = end - start;
-            bool xIncreasing = direction.X > 0, zIncreasing = direction.Z > 0;
-
-            float scale = map.TerrainScale;
-            Vector3[] triangle1 = new Vector3[3], triangle2 = new Vector3[3];
-            bool firstQuad = true;
-            bool triangle1First = true;
-
-            while (isBetween(x0, start.X, end.X) && isBetween(z0, start.Z, end.Z) &&
-                   isBetween(x1, start.X, end.X) && isBetween(z1, start.Z, end.Z))
-            {
-                // Send the two triangles of the associated quad. This code matches up with how triangles are made in TerrainProcessor.
-                // Coordinates are converted back to world-origin coordinates, and Y value is retrieved.
-                triangle1[0].X = x0;
-                triangle1[0].Z = z0;
-                triangle1[0] += map.Position;
-                triangle1[0].Y = GetHeight(triangle1[0]);
-                triangle1[1].X = x1;
-                triangle1[1].Z = z0;
-                triangle1[1] += map.Position;
-                triangle1[1].Y = GetHeight(triangle1[1]);
-                triangle1[2].X = x1;
-                triangle1[2].Z = z1;
-                triangle1[2] += map.Position;
-                triangle1[2].Y = GetHeight(triangle1[2]);
-
-                triangle2[0].X = triangle1[0].X;
-                triangle2[0].Z = triangle1[0].Z;
-                triangle1[0].Y = triangle1[0].Y;
-                triangle2[1].X = x1;
-                triangle2[1].Z = z1;
-                triangle2[1] -= map.Position;
-                triangle2[1].Y = GetHeight(triangle1[1]);
-                triangle2[2].X = x0;
-                triangle2[2].Z = z1;
-                triangle2[2] -= map.Position;
-                triangle2[2].Y = GetHeight(triangle1[2]);
-
-                // Figure out which triangle in the quad is first along our ray
-                if (xIncreasing && !zIncreasing)
-                {
-                    triangle1First = false;
-                }
-                else if (zIncreasing && !xIncreasing)
-                {
-                    triangle1First = true;
-                }
-                else
-                {
-                    if ((direction.X < direction.Z) ^ (xIncreasing /*&& zIncreasing*/))
-                    {
-                        triangle1First = false;
-                    }
-                    else
-                    {
-                        triangle1First = true;
-                    }
-                }
-
-                // All the firstQuad stuff skips the first triangle we'd normally return if start is not in said triangle
-                if (triangle1First)
-                {
-                    if (firstQuad && !inTriangle(triangle1, start))
-                    {
-                        yield return triangle2;
-                    }
-                    else
-                    {
-                        yield return triangle1;
-                        yield return triangle2;
-                    }
-                }
-                else
-                {
-                    //triangle2First
-                    if (firstQuad && !inTriangle(triangle2, start))
-                    {
-                        yield return triangle1;
-                    }
-                    else
-                    {
-                        yield return triangle2;
-                        yield return triangle1;
-                    }
-
-                }
-
-
-                // Now get the next quad our line goes through
-
-                Vector3 px1, px2, pz1, pz2;
-                if (xIncreasing)
-                {
-                    px1 = new Vector3(x0, 0, z1);
-                    px2 = new Vector3(x1, 0, z1);
-                }
-                else
-                {
-                    px1 = new Vector3(x0, 0, z0);
-                    px2 = new Vector3(x1, 0, z0);
-                }
-                if (zIncreasing)
-                {
-                    pz1 = new Vector3(x1, 0, z0);
-                    pz2 = new Vector3(x1, 0, z1);
-                }
-                else
-                {
-                    pz1 = new Vector3(x0, 0, z0);
-                    pz2 = new Vector3(x0, 0, z1);
-                }
-
-                Vector3? xIntersection = segmentIntersection(start, end, px1, px2);
-                Vector3? zIntersection = segmentIntersection(start, end, pz1, pz2);
-
-                if (xIntersection == null && zIntersection == null)
-                {
-                    // move diagonally to next quad
-                    x0 += xIncreasing ? scale : -scale;
-                    z0 += zIncreasing ? scale : -scale;
-                    x1 += xIncreasing ? scale : -scale;
-                    z1 += zIncreasing ? scale : -scale;
-                }
-                else if (zIntersection == null)
-                {
-                    // x intersection! move along x-axis to next quad
-                    z0 += zIncreasing ? scale : -scale;
-                    z1 += zIncreasing ? scale : -scale;
-                }
-                else
-                {
-                    // z intersection! move along z-axis to next quad
-                    x0 += xIncreasing ? scale : -scale;
-                    x1 += xIncreasing ? scale : -scale;
-                }
-            }
-        }
+        #region Useful stuff that I'm not using anymore
 
         // Gives point of triangle-line intersection, or null if they don't intersect
-        public static Vector3? triangleRayIntersection(Vector3[] triangle, Ray ray)
+        static Vector3? triangleRayIntersection(Vector3[] triangle, Ray ray)
         {
             Plane p = new Plane(triangle[0], triangle[1], triangle[2]);
             float? result = ray.Intersects(p);
@@ -321,7 +145,7 @@ namespace Game465P3
         }
 
         // Algorithm from http://en.wikipedia.org/wiki/Barycentric_coordinates_%28mathematics%29
-        public static bool inTriangle(Vector3[] triangle, Vector3 point)
+        static bool inTriangle(Vector3[] triangle, Vector3 point)
         {
             float A = triangle[0].X - triangle[2].X;
             float B = triangle[1].X - triangle[2].X;
@@ -358,70 +182,6 @@ namespace Game465P3
 
             return false;
         }
-
-        /*
-        // Enumerable list of all intersections of given line segment with heightmap quad edges
-        public IEnumerable<Vector3> edgeLineIntersections(Vector3 start3, Vector3 end3)
-        {
-            // Convert to map origin
-            start3 -= map.Position;
-            end3 -= map.Position;
-
-            // Just pretend all the Ys in the Vector2s are Zs.
-            Vector2 start = new Vector2(start3.X, start3.Z);
-            Vector2 end = new Vector2(end3.X, end3.Z);
-
-            Vector2 direction = Vector2.Normalize(end - start);
-
-            int xdir = direction.X > 0 ? 1 : -1;
-            int zdir = direction.Y > 0 ? 1 : -1;
-
-            // Find first edge that line crosses.
-
-            float xbelow = start.X - (start.X % map.TerrainScale);
-            float xabove = xbelow + map.TerrainScale;
-            float zbelow = start.Y - (start.Y % map.TerrainScale);
-            float zabove = zbelow + map.TerrainScale;
-
-            // xstart/xend are parallel to the x-axis
-            Vector2 xstart = zdir > 0 ? new Vector2(xbelow, zabove) : new Vector2(xbelow, zbelow);
-            Vector2 xend = zdir > 0 ? new Vector2(xabove, zabove) : new Vector2(xabove, zbelow);
-
-            Vector2 zstart = xdir > 0 ? new Vector2(xabove, zbelow) : new Vector2(xbelow, zbelow);
-            Vector2 zend = xdir > 0 ? new Vector2(xabove, zabove) : new Vector2(xbelow, zabove);
-
-            Vector3 intersection = segmentIntersection(start, end, xstart, xend);
-
-            bool xIntersection;
-            if (intersection.X != float.PositiveInfinity)
-            {
-                // The first intersection is parallel to the x-axis
-                xIntersection = true;
-            }
-            else
-            {
-                // The first intersection is parallel to the z-axis
-                xIntersection = false;
-                intersection = segmentIntersection(start, end, zstart, zend);
-            }
-
-            // Now that we have the first edge intersection, convert it to indices, send it through the iterator, then get the next one.
-            while (true)
-            {
-                // Convert intersection to the two index pairs that define the edge we're currently on
-                //int[,] result = new int[2, 2];
-                //result[0, 0] = (int)(intersection.X / map.TerrainScale);
-                //result[0, 1] = (int)(intersection.Y / map.TerrainScale);
-                //result[1, 0] = result[0, 0] + (xIntersection ? 1 : 0);
-                //result[1, 1] = result[0, 1] + (xIntersection ? 0 : 1);
-                yield return intersection;
-
-                // TODO: get the next edge
-            }
-
-            // This iterator never ends. It must be broken by the caller.
-        }
-        */
 
         // Code adapted from http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
         static Vector3? segmentIntersection(Vector3 P1, Vector3 P2, Vector3 P3, Vector3 P4)
@@ -463,5 +223,7 @@ namespace Game465P3
             //return IntersectResult.NotIntersecting;
             return null;
         }
+
+        #endregion
     }
 }

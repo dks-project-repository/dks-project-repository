@@ -22,12 +22,10 @@ namespace Game465P3
 
         public virtual void update()
         {
-            // N.B. DO NOT modify transform.Translation of a movable outside of this method. It will break the bounding box.
-
             // Calculate velocity
             velocity += acceleration;
             float v = velocity.Length();
-            if (v != 0)
+            if (!(this is Projectile) && v != 0)
                 velocity -= Settings.drag * v * v * Vector3.Normalize(velocity);
 
             // Calculate position
@@ -119,8 +117,8 @@ namespace Game465P3
             if ((x != 0 || z != 0) && game.terrain.onGround(location) || terrainY > location.Y)
                 location.Y = terrainY;
 
-            game.oct.Move(this, location - transform.Translation);
             transform.Translation = location;
+            game.oct.Move(this, transformBounds());
         }
 
         public abstract bool handleCollision(Vector3 normal);

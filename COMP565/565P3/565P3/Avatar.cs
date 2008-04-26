@@ -69,7 +69,7 @@ namespace Game465P3
             location.Y = game.terrain.GetHeight(location) + Settings.collisionHeightDisplacement;
             transform.Translation = location;
             update();
-            createBoundingBox();
+            //createBoundingBox();
             origLocation = transform.Translation;
 
             weapons = new LinkedList<Type>();
@@ -223,7 +223,6 @@ namespace Game465P3
         {
             yaw = pitch = MathHelper.PiOver2;
             transform.Translation = origLocation;
-            createBoundingBox();
             game.oct.Add(this);
             velocity = Vector3.Zero;
             camera.zoom = camera.targetZoom;
