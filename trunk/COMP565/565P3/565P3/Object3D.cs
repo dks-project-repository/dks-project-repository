@@ -8,28 +8,29 @@ namespace Game465P3
     public abstract class Object3D
     {
         public Matrix transform;
+        public BoundingBox modelBounds;
         public BoundingBox bounds;
         // N.B. The bounds should be maximum bounds at ANY possible rotation.
 
         public Object3D()
         {
             transform = Matrix.Identity;
-            createBoundingBox();
         }
 
         public Object3D(Vector3 location)
         {
             transform = Matrix.Identity;
             transform.Translation = location;
-            createBoundingBox();
         }
 
-        public virtual void createBoundingBox()
+        protected BoundingBox transformBounds()
         {
-            Vector3 v = transform.Translation;
-            float h = Settings.cameraHeight * 1.5f;
-            float w = h / 3;
-            bounds = new BoundingBox(new Vector3(v.X - w, v.Y, v.Z - w), new Vector3(v.X + w, v.Y + h, v.Z + w));
+            Vector3[] corners = modelBounds.GetCorners();
+            for (int i = 0; i < corners.Length; i++)
+            {
+                corners[i] = Vector3.Transform(corners[i], transform);
+            }
+            return BoundingBox.CreateFromPoints(corners);
         }
 
         public static Vector3 rotate(Vector3 axes, Vector3 v1, float radians)

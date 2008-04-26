@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "565P3x", "565P3x\565P3x.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxColliderXbox", "BoxColliderXbox\BoxColliderXbox.csproj", "{D00A3654-EFED-45D8-A265-0F0327D28CFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelBoundsPipeline", "ModelBoundsPipeline\ModelBoundsPipeline.csproj", "{0606D533-74B3-4570-8F19-320252EF37B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -96,6 +98,18 @@ Global
 		{819297EF-AF6A-4304-97C6-7DE2264EF7C6}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
 		{819297EF-AF6A-4304-97C6-7DE2264EF7C6}.Release|x86.ActiveCfg = Release|Xbox 360
 		{819297EF-AF6A-4304-97C6-7DE2264EF7C6}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Debug|x86.ActiveCfg = Debug|x86
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Debug|x86.Build.0 = Debug|x86
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Release|x86.ActiveCfg = Release|x86
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Release|x86.Build.0 = Release|x86
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
+		{0606D533-74B3-4570-8F19-320252EF37B4}.Release|Xbox 360.Build.0 = Release|Xbox 360
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -38,7 +38,7 @@
     <Compile Include="turret.x">
       <Name>turret</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -53,10 +53,14 @@
     <Compile Include="axes.x">
       <Name>axes</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ModelBoundsPipeline\ModelBoundsPipeline.csproj">
+      <Project>{0606D533-74B3-4570-8F19-320252EF37B4}</Project>
+      <Name>ModelBoundsPipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\TankOnAHeightmapPipeline\TankOnAHeightmapPipeline.csproj">
       <Project>{287934F7-D1DF-4E3E-A05E-505C500113DC}</Project>
       <Name>TankOnAHeightmapPipeline</Name>
@@ -101,12 +105,12 @@
     <Compile Include="disc.x">
       <Name>disc</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
     <Compile Include="lob.x">
       <Name>lob</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ModelBoundsProcessor</Processor>
     </Compile>
     <None Include="rocks.bmp">
       <Name>rocks</Name>

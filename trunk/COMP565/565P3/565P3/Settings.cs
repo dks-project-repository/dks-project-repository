@@ -62,6 +62,7 @@ namespace Game465P3
         public const Keys timeSpeedUp = Keys.OemPlus;
         public const Keys timeSlowDown = Keys.OemMinus;
         public const Keys showMap = Keys.C;
+        public const Keys drawBoundingBoxes = Keys.B;
 
         public const Buttons jet = Buttons.RightShoulder;
         public const Buttons skiButton = Buttons.LeftShoulder;

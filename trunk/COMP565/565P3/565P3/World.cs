@@ -44,6 +44,8 @@ namespace Game465P3
 
         public Model disc, lob;
 
+        public bool drawBoundingBoxes = false;
+
         public World(Game game, InputHandler input)
             : base(game)
         {
@@ -147,7 +149,7 @@ namespace Game465P3
                 }
             }
 
-            // mouselook toggle
+            // Mouselook toggle
 #if !XBOX360
             if (input.IsKeyPressed(Settings.toggleMouselook))
             {
@@ -155,6 +157,13 @@ namespace Game465P3
             }
 #endif
 
+            // Bounding box draw toggle
+            if (input.IsKeyPressed(Settings.drawBoundingBoxes))
+            {
+                drawBoundingBoxes = !drawBoundingBoxes;
+            }
+
+            
             foreach (Updatable u in updatables)
             {
                 u.update();

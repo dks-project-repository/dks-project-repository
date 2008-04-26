@@ -23,7 +23,7 @@ namespace Game465P3
 
         public bool Add(Object3D o)
         {
-            Node n = root.GetContainer(o);
+            Node n = GetContainer(o.bounds);
             if (n == null)
                 return false;
 
@@ -33,21 +33,21 @@ namespace Game465P3
 
         public bool Remove(Object3D o)
         {
-            Node n = root.GetContainer(o);
+            Node n = GetContainer(o.bounds);
             if (n == null)
                 return false;
 
             return n.Remove(o);
         }
 
-        public bool Move(Object3D o, Vector3 movement)
+        public bool Move(Object3D o, BoundingBox newBounds)
         {
             if (Remove(o))
             {
                 BoundingBox oldBox = o.bounds;
-                o.bounds = new BoundingBox(o.bounds.Min + movement, o.bounds.Max + movement);
+                o.bounds = newBounds;
 
-                Node n = root.GetContainer(o);
+                Node n = GetContainer(oldBox);
                 if (n.Move(o))
                     return true;
 
@@ -73,26 +73,26 @@ namespace Game465P3
         public T intersection<T>(Ray r, float maxDist) where T : Object3D
         {
             float dummy;
-            return root.intersection<T>(r, maxDist, out dummy);
+            return root.Intersection<T>(r, maxDist, out dummy);
         }
 
         public List<Object3D> getAllWithin(BoundingBox b)
         {
             List<Object3D> list = new List<Object3D>();
-            root.getAllWithin(b, list);
+            root.GetAllWithin(b, list);
             return list;
         }
 
         public List<T> getAllWithin<T>(BoundingBox b) where T : Object3D
         {
             List<T> list = new List<T>();
-            root.getAllWithin<T>(b, list);
+            root.GetAllWithin<T>(b, list);
             return list;
         }
 
-        protected Node getContainer(Object3D o)
+        protected Node GetContainer(BoundingBox b)
         {
-            return root.GetContainer(o);
+            return root.GetContainer(b);
         }
 
         protected class Node
@@ -165,21 +165,21 @@ namespace Game465P3
                         return false;
                     return parent.Move(o);
                 }
-                GetContainer(o).AddHere(o);
+                GetContainer(o.bounds).AddHere(o);
                 return true;
             }
 
             // Return smallest node in which the object fits
-            public Node GetContainer(Object3D o)
+            public Node GetContainer(BoundingBox b)
             {
-                if (box.Contains(o.bounds) != ContainmentType.Contains)
+                if (box.Contains(b) != ContainmentType.Contains)
                     return null;
 
                 if (children != null)
                 {
                     for (int i = 0; i < 8; i++)
                     {
-                        Node n = children[i].GetContainer(o);
+                        Node n = children[i].GetContainer(b);
                         if (n != null)
                             return n;
                     }
@@ -188,7 +188,7 @@ namespace Game465P3
                 return this;
             }
 
-            public void getAllWithin(BoundingBox b, List<Object3D> result)
+            public void GetAllWithin(BoundingBox b, List<Object3D> result)
             {
                 if (box.Contains(b) != ContainmentType.Disjoint)
                 {
@@ -198,36 +198,33 @@ namespace Game465P3
                     {
                         for (int i = 0; i < 8; i++)
                         {
-                            children[i].getAllWithin(b, result);
+                            children[i].GetAllWithin(b, result);
                         }
                     }
                 }
             }
 
-            public void getAllWithin<T>(BoundingBox b, List<T> result) where T : Object3D
+            public void GetAllWithin<T>(BoundingBox b, List<T> result) where T : Object3D
             {
                 if (box.Contains(b) != ContainmentType.Disjoint)
                 {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        try
-                        {
+                        if (list[i] is T)
                             result.Add((T)list[i]);
-                        }
-                        catch (InvalidCastException) { }
                     }
 
                     if (children != null)
                     {
                         for (int i = 0; i < 8; i++)
                         {
-                            children[i].getAllWithin(b, result);
+                            children[i].GetAllWithin(b, result);
                         }
                     }
                 }
             }
 
-            public T intersection<T>(Ray r, float maxDist, out float minDist) where T : Object3D
+            public T Intersection<T>(Ray r, float maxDist, out float minDist) where T : Object3D
             {
                 minDist = maxDist;
 
@@ -257,7 +254,7 @@ namespace Game465P3
                         for (int i = 0; i < children.Length; i++)
                         {
                             float childDist;
-                            T childObject = children[i].intersection<T>(r, minDist, out childDist);
+                            T childObject = children[i].Intersection<T>(r, minDist, out childDist);
                             if (childObject != null)
                             {
                                 minDist = childDist;

@@ -15,11 +15,13 @@ namespace Game465P3
         {
             this.owner = owner;
             transform = Matrix.CreateWorld(Vector3.Zero, owner.actualAt, Vector3.Up);
-            Vector3 v = owner.transform.Translation + owner.actualAt * (bounds.Max - bounds.Min).Length() * 1.25f;
+            Vector3 v = owner.transform.Translation + owner.actualAt * (owner.modelBounds.Max - owner.modelBounds.Min).Length() * 1.25f;
             v.Y += Settings.cameraHeight / 2;
             if (game.terrain.onGround(v))
                 v.Y = game.terrain.GetHeight(v) + Settings.collisionHeightAboveTerrain;
             transform.Translation = v;
+            bounds = transformBounds();
+            game.oct.Add(this); //TODO: figure out if i want this line
             skiing = true;
             game.add(this);
         }
@@ -39,16 +41,6 @@ namespace Game465P3
                     a.Health -= damage;
                 }
             }
-
-            //Vector3 aDiff = game.avatar.transform.Translation - transform.Translation;
-            //float aDist = aDiff.Length();
-            //if (aDist < Settings.explosionRadius)
-            //{
-            //    float damage = (Settings.explosionRadius - aDist) / Settings.explosionRadius * Settings.explosionDamage;
-            //    if (aDist != 0)
-            //        game.avatar.velocity += Vector3.Normalize(aDiff) * damage * Settings.explosionAccel;
-            //    game.avatar.Health -= damage;
-            //}
 
             game.remove(this);
             return true;
