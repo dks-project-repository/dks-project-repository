@@ -21,8 +21,8 @@ namespace ModelBoundsPipeline
         private BoundingBox calculateBoundingBox(NodeContentCollection ncc)
         {
             calculateMinMax(ncc);
-            Vector3 min = new Vector3(minX, minY, minZ) * Scale;
-            Vector3 max = new Vector3(maxX, maxY, maxZ) * Scale;
+            Vector3 min = new Vector3(minX, minY, minZ);
+            Vector3 max = new Vector3(maxX, maxY, maxZ);
             return new BoundingBox(min, max);
         }
 

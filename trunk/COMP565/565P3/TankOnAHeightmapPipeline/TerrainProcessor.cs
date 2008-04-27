@@ -170,7 +170,7 @@ namespace TanksOnAHeightmapPipeline
             // generate information about the height map, and attach it to the finished
             // model's tag.
             model.Tag = new HeightMapInfoContent(terrainMesh, scale,
-                heightfield.Width, heightfield.Height);
+                heightfield.Width, heightfield.Height, bumpiness);
 
             return model;
         }

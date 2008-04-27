@@ -82,7 +82,10 @@ namespace Game465P3
             {
                 lastgamePadState = currgamePadState;
                 currgamePadState = GamePad.GetState(PlayerIndex.One);
+                gamePadConnected = true;
             }
+            else
+                gamePadConnected = false;
 
 #if !XBOX360
             lastMouse = currMouse;

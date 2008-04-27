@@ -37,7 +37,7 @@ namespace Game465P3
         //    : base(g.Game)
         //{
         //    game = g;
-        //    sprites = new List<MinimapDrawable>();
+        //    sprites = new LinkedList<MinimapDrawable>();
         //    shading = new Color(new Vector4(1, 1, 1, Settings.minimapAlpha));
         //}
 
@@ -66,7 +66,7 @@ namespace Game465P3
             makeMinimap();
 
             Game.Window.ClientSizeChanged += Window_ClientSizeChanged;
-            GraphicsDevice.DeviceReset += DeviceReset;
+            GraphicsDevice.DeviceReset += GraphicsDevice_DeviceReset;
 
             Window_ClientSizeChanged(null, null);
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -132,7 +132,7 @@ namespace Game465P3
 
         protected override void Dispose(bool disposing)
         {
-            GraphicsDevice.DeviceReset -= DeviceReset;
+            GraphicsDevice.DeviceReset -= GraphicsDevice_DeviceReset;
             Game.Window.ClientSizeChanged -= Window_ClientSizeChanged;
             texture.Dispose();
 
@@ -151,7 +151,7 @@ namespace Game465P3
             rectangleFullscreen = new Rectangle((int)(vWidth - vHeight * mapAspectRatio) / 2, 0, (int)(vHeight * mapAspectRatio), vHeight);
         }
 
-        protected void DeviceReset(object o, EventArgs args)
+        protected void GraphicsDevice_DeviceReset(object o, EventArgs args)
         {
             makeMinimap();
         }

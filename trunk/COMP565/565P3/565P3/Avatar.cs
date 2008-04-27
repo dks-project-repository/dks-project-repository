@@ -82,7 +82,7 @@ namespace Game465P3
             if (dead)
             {
                 actualAt = game.input.handleRotation(ref yaw, ref pitch);
-                camera.zoom = Settings.minZoom * 3;
+                camera.zoom = Settings.minZoom * 2;
 
                 base.update();
 
@@ -119,9 +119,9 @@ namespace Game465P3
             {
                 Type t = weapons.First.Value;
                 if (t == typeof(StraightProjectile))
-                    new StraightProjectile(game, game.disc, this);
+                    new StraightProjectile(game, this);
                 else if (t == typeof(LobProjectile))
-                    new LobProjectile(game, game.lob, this);
+                    new LobProjectile(game, this);
             }
 
             // TODO: eventually remove this testing code
@@ -132,15 +132,18 @@ namespace Game465P3
                 v.Y += 100;
                 Vector3 aAt = actualAt;
                 actualAt = Vector3.Normalize(Vector3.Down + aAt);
-                Random r = new Random();
                 for (int i = -5; i < 5; i++)
                 {
                     for (int j = -5; j < 5; j++)
                     {
-                        v.X = w.X + (float)r.NextDouble() * 300 - 150;
-                        v.Z = w.Z + (float)r.NextDouble() * 300 - 150;
-                        transform.Translation = v;
-                        new LobProjectile(game, game.lob, this);
+                        for (int k = 0; k < 5; k++)
+                        {
+                            v.X = w.X + i * 300;
+                            v.Y = w.Y + k * 300;
+                            v.Z = w.Z + j * 300;
+                            transform.Translation = v;
+                            new LobProjectile(game, this);   
+                        }
                     }
                 }
                 transform.Translation = w;

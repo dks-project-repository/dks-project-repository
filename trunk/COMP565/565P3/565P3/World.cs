@@ -16,13 +16,22 @@ namespace Game465P3
     {
         public Camera currentCamera;
         public Matrix projection;
+        public BoundingFrustum cameraFrustum;
+        public bool drawBoundingBoxes = false;
+
+        public Terrain terrain;
+        public Octree oct;
+
+        public InputHandler input;
+
+        public Dictionary<Type, Model> models;
+
+        protected Avatar avatar;
+        public float AvatarVelocity { get { return avatar.Velocity; } }
 
         protected List<Drawable> drawables;
         protected List<Updatable> updatables;
         protected List<Drawable> toRemove;
-
-        public Terrain terrain;
-        public Avatar avatar;
 
         protected SpriteBatch spriteBatch;
         protected Texture2D reticle;
@@ -37,14 +46,6 @@ namespace Game465P3
 
         protected LinearMeter health;
         protected LinearMeter jet;
-
-        public InputHandler input;
-
-        public Octree oct;
-
-        public Model disc, lob;
-
-        public bool drawBoundingBoxes = false;
 
         public World(Game game, InputHandler input)
             : base(game)
@@ -67,6 +68,9 @@ namespace Game465P3
 
             minimap.Dispose();
             pause.Dispose();
+            damage.Dispose();
+            health.Dispose();
+            jet.Dispose();
 
             base.Dispose(disposing);
         }
@@ -88,6 +92,7 @@ namespace Game465P3
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Window_ClientSizeChanged(null, null);
             currentCamera = avatar.camera;
+            currentCamera.update();
 #if !XBOX360
             input.Mouselook = true;
 #endif
@@ -120,8 +125,9 @@ namespace Game465P3
 
             minimap = new Minimap(Game, this.DrawOrder, input, terrain.drawTopDown, terrain.Width, terrain.Height);
 
-            disc = Game.Content.Load<Model>("disc");
-            lob = Game.Content.Load<Model>("lob");
+            models = new Dictionary<Type, Model>();
+            models.Add(typeof(StraightProjectile), Game.Content.Load<Model>("disc"));
+            models.Add(typeof(LobProjectile), Game.Content.Load<Model>("lob"));
         }
 
         protected override void OnVisibleChanged(object sender, EventArgs args)

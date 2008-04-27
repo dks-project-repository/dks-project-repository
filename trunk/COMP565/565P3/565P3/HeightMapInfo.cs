@@ -51,12 +51,15 @@ namespace TanksOnAHeightmap
         // the total height of the height map, including terrainscale.
         private float heightmapHeight;
 
+        private float bumpiness;
+
 
         #endregion
 
         #region Properties
 
         public float TerrainScale { get { return terrainScale; } }
+        public float Bumpiness { get { return bumpiness; } }
         public Vector3 Position { get { return heightmapPosition; } }
         public float Width { get { return heightmapWidth; } }
         public float Height { get { return heightmapHeight; } }
@@ -80,7 +83,7 @@ namespace TanksOnAHeightmap
         }
 
         // the constructor will initialize all of the member variables.
-        public HeightMapInfo(float[,] heights, Vector3[,] normals, float terrainScale)
+        public HeightMapInfo(float[,] heights, Vector3[,] normals, float terrainScale, float bumpiness)
         {
             if (heights == null)
             {
@@ -92,6 +95,7 @@ namespace TanksOnAHeightmap
             }
 
             this.terrainScale = terrainScale;
+            this.bumpiness = bumpiness;
             this.heights = heights;
             this.normals = normals;
 
@@ -238,6 +242,7 @@ namespace TanksOnAHeightmap
             HeightMapInfo existingInstance)
         {
             float terrainScale = input.ReadSingle();
+            float bumpiness = input.ReadSingle();
             int width = input.ReadInt32();
             int height = input.ReadInt32();
             float[,] heights = new float[width, height];
@@ -257,7 +262,7 @@ namespace TanksOnAHeightmap
                     normals[x, z] = input.ReadVector3();
                 }
             }
-            return new HeightMapInfo(heights, normals, terrainScale);
+            return new HeightMapInfo(heights, normals, terrainScale, bumpiness);
         }
     }
 }
