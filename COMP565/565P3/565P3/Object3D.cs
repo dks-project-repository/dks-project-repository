@@ -10,7 +10,6 @@ namespace Game465P3
         public Matrix transform;
         public BoundingBox modelBounds;
         public BoundingBox bounds;
-        // N.B. The bounds should be maximum bounds at ANY possible rotation.
 
         public Object3D()
         {
@@ -23,7 +22,7 @@ namespace Game465P3
             transform.Translation = location;
         }
 
-        protected BoundingBox transformBounds()
+        protected BoundingBox calculateBounds()
         {
             Vector3[] corners = modelBounds.GetCorners();
             for (int i = 0; i < corners.Length; i++)
@@ -32,6 +31,13 @@ namespace Game465P3
             }
             return BoundingBox.CreateFromPoints(corners);
         }
+
+        //protected BoundingSphere calculateSphere()
+        //{
+        //    Vector3 center = (bounds.Min + bounds.Max) / 2 + transform.Translation;
+        //    float radius = ((bounds.Max - bounds.Min) / 2).Length();
+        //    return new BoundingSphere(center, radius);
+        //}
 
         public static Vector3 rotate(Vector3 axes, Vector3 v1, float radians)
         {

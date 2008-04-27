@@ -14,7 +14,7 @@ namespace Game465P3
         public const float FOVdegrees = 90;
         public const int initWidth = 1024;
         public const int initHeight = 576;
-        public const int octreeDepth = 0;
+        public const int octreeDepth = 6;
 
         public static readonly float[] timeMultipliers = { 0.25f, 0.5f, 1, 2, 4, 8, 16, 32 };
         public const int timeMultiplierDefaultIndex = 2;
@@ -27,7 +27,7 @@ namespace Game465P3
 
         public const float jetExpend = 1 / 180f;
         public const float jetRefuel = 1 / 300f;
-        public const float jetMinFuel = 1 / 16f;
+        public const float jetMinFuel = 1 / 12f;
 
         public const float skiStrafeProportion = .005f;
         public const float walkSpeed = .2f;
@@ -80,8 +80,8 @@ namespace Game465P3
 
         // Camera
         public const float zoomMultiplier = 1.4f;
-        public const float minZoom = 10;
-        public const float maxZoom = 5976;
+        public const float minZoom = 4;
+        public const float maxZoom = 5856;
 
         public const int FOVchangeFrames = 15;
         public static readonly int[] FOVdividers = { 2, 5, 10, 20 };

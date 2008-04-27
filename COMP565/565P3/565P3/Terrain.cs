@@ -23,7 +23,11 @@ namespace Game465P3
                 throw new InvalidOperationException(message);
             }
 
-            collider = new BoxCollider.CollisionMesh(model, 4);
+            collider = new BoxCollider.CollisionMesh(model, 5);
+
+            Vector3 max = new Vector3(map.Width / 2, 0, map.Height / 2);
+            Vector3 min = new Vector3(-map.Width / 2, -MaxTerrainHeight, -map.Height / 2);
+            bounds = new BoundingBox(min, max);
         }
 
         public float GetHeight(Vector3 pos)
@@ -49,6 +53,7 @@ namespace Game465P3
         public float Width { get { return map.Width; } }
         public float Height { get { return map.Height; } }
         public Vector3 Position { get { return map.Position; } }
+        public float MaxTerrainHeight { get { return map.Bumpiness; } }
 
         public void drawTopDown()
         {

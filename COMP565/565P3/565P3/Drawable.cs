@@ -28,7 +28,7 @@ namespace Game465P3
             if (model.Tag is BoundingBox)
             {
                 modelBounds = (BoundingBox)model.Tag;
-                bounds = transformBounds();
+                bounds = calculateBounds();
             }
 
             if (basicEffect == null)
@@ -37,6 +37,9 @@ namespace Game465P3
 
         public void draw()
         {
+            if (game.cameraFrustum == null || !game.cameraFrustum.Intersects(bounds))
+                return;
+
             if (IsDrawn)
                 foreach (ModelMesh mesh in model.Meshes)
                 {

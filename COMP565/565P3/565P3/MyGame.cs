@@ -15,7 +15,7 @@ namespace Game465P3
     {
         GraphicsDeviceManager graphics;
 
-        public InputHandler input;
+        protected InputHandler input;
 
         protected World world;
 
@@ -165,7 +165,7 @@ namespace Game465P3
 
             if (world.currentCamera is LinkedCamera)
             {
-                printString(spriteBatch, string.Format("V: {0:f0}", world.avatar.Velocity * 60), 3);
+                printString(spriteBatch, string.Format("V: {0:f0}", world.AvatarVelocity * 60), 3);
             }
 
             spriteBatch.End();

@@ -115,6 +115,8 @@ namespace Game465P3
                     transform = Matrix.CreateLookAt(position, loc, Vector3.Up);
                 }
             }
+
+            base.update();
         }
 
         public void Dispose()

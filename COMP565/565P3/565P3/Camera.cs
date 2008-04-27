@@ -16,6 +16,9 @@ namespace Game465P3
             game = g;
         }
 
-        public abstract void update();
+        public virtual void update()
+        {
+            game.cameraFrustum = new BoundingFrustum(transform * game.projection);
+        }
     }
 }

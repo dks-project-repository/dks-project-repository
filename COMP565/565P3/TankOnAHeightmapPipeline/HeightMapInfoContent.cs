@@ -59,13 +59,19 @@ namespace TanksOnAHeightmapPipeline
         }
         private float terrainScale;
 
+        public float Bumpiness
+        {
+            get { return bumpiness; }
+        }
+        private float bumpiness;
+
         /// <summary>
         /// This constructor will initialize the height array from the values in the 
         /// bitmap. Each pixel in the bitmap corresponds to one entry in the height
         /// array.
         /// </summary>
         public HeightMapInfoContent(MeshContent terrainMesh, float terrainScale, 
-            int terrainWidth, int terrainLength)
+            int terrainWidth, int terrainLength, float bumpiness)
         {
             // validate the parameters
             if (terrainMesh == null)
@@ -80,8 +86,13 @@ namespace TanksOnAHeightmapPipeline
             {
                 throw new ArgumentOutOfRangeException("terrainLength");
             }
+            if (bumpiness <= 0)
+            {
+                throw new ArgumentOutOfRangeException("bumpiness");
+            }
 
             this.terrainScale = terrainScale;
+            this.bumpiness = bumpiness;
 
             // create new arrays of the requested size.
             height = new float[terrainWidth, terrainLength];
@@ -123,7 +134,7 @@ namespace TanksOnAHeightmapPipeline
         protected override void Write(ContentWriter output, HeightMapInfoContent value)
         {
             output.Write(value.TerrainScale);
-
+            output.Write(value.Bumpiness);
             output.Write(value.Height.GetLength(0));
             output.Write(value.Height.GetLength(1));
             foreach (float height in value.Height)

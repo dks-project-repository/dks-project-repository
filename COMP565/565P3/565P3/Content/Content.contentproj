@@ -39,6 +39,7 @@
       <Name>turret</Name>
       <Importer>XImporter</Importer>
       <Processor>ModelBoundsProcessor</Processor>
+      <ProcessorParameters_Scale>0.25</ProcessorParameters_Scale>
     </Compile>
   </ItemGroup>
   <ItemGroup>

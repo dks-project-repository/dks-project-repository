@@ -39,16 +39,19 @@ namespace Game465P3
                 Vector3 newLocation = location + velocity * travelAmountLeft;
 
                 // Traction & friction (on ground only)
-                if (game.terrain.onGround(location))
+                if (this is Avatar && game.terrain.onGround(location))
                 {
                     Vector3 normal = game.terrain.GetNormal(location);
                     float normalForce = Object3D.project(Vector3.Down, normal).Length();
+                    //TODO normalForce = MathHelper.Clamp(MathHelper.Lerp(-1, 1, normalForce), 0, 1);
 
                     // Traction
                     if (tractionForce.LengthSquared() != 0)
                     {
                         if (!skiing) // Normal movement
+                        {
                             velocity += Object3D.orthogonalize(tractionForce * (Settings.walkSpeed * normalForce), normal);
+                        }
                         else
                         {
                             // Allow slight lateral movement while skiing
@@ -117,8 +120,19 @@ namespace Game465P3
             if ((x != 0 || z != 0) && game.terrain.onGround(location) || terrainY > location.Y)
                 location.Y = terrainY;
 
-            transform.Translation = location;
-            game.oct.Move(this, transformBounds());
+            BoundingBox b;
+            if (this is Avatar)
+            {
+                transform.Translation = location;
+                b = calculateBounds();
+            }
+            else
+            {
+                Vector3 diff = location - transform.Translation;
+                transform.Translation = location;
+                b = new BoundingBox(bounds.Min + diff, bounds.Max + diff);
+            }
+            game.oct.Move(this, b);
         }
 
         public abstract bool handleCollision(Vector3 normal);

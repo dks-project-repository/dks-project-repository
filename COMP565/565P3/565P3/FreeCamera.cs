@@ -29,6 +29,7 @@ namespace Game465P3
                 position += game.input.handleTranslation(newAt) * Settings.freeCameraSpeed;
 
             transform = Matrix.CreateLookAt(position, position + newAt, Vector3.Up);
+            base.update();
         }
 
         // yaw-euler conversion stolen from my 465 project

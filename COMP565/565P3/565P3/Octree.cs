@@ -23,7 +23,7 @@ namespace Game465P3
 
         public bool Add(Object3D o)
         {
-            Node n = GetContainer(o.bounds);
+            Node n = root.GetContainer(o.bounds);
             if (n == null)
                 return false;
 
@@ -33,7 +33,7 @@ namespace Game465P3
 
         public bool Remove(Object3D o)
         {
-            Node n = GetContainer(o.bounds);
+            Node n = root.GetContainer(o.bounds);
             if (n == null)
                 return false;
 
@@ -47,7 +47,7 @@ namespace Game465P3
                 BoundingBox oldBox = o.bounds;
                 o.bounds = newBounds;
 
-                Node n = GetContainer(oldBox);
+                Node n = root.GetContainer(oldBox);
                 if (n.Move(o))
                     return true;
 
@@ -88,11 +88,6 @@ namespace Game465P3
             List<T> list = new List<T>();
             root.GetAllWithin<T>(b, list);
             return list;
-        }
-
-        protected Node GetContainer(BoundingBox b)
-        {
-            return root.GetContainer(b);
         }
 
         protected class Node
@@ -234,8 +229,9 @@ namespace Game465P3
                 {
                     T minObject = null;
 
-                    // Check objects in this node's list
-                    for (int i = 0; i < list.Count; i++)
+                    // Check objects in this node's List
+                    int count = list.Count;
+                    for (int i = 0; i < count; i++)
                     {
                         if (list[i] as T != null)
                         {
@@ -251,7 +247,7 @@ namespace Game465P3
                     // Check children nodes
                     if (children != null)
                     {
-                        for (int i = 0; i < children.Length; i++)
+                        for (int i = 0; i < 8; i++)
                         {
                             float childDist;
                             T childObject = children[i].Intersection<T>(r, minDist, out childDist);
