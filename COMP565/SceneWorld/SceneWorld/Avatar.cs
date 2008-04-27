@@ -242,7 +242,7 @@ namespace SceneWorld
             // If not, check to see if we're near a treasure
             if (dest == null)
             {
-                IndexPair ip = a.scene.Treasures.treasureWithin(a.location, yon);
+                IndexPair ip = a.scene.Treasures.treasureWithin(a.location, yon, "");
                 if (ip != null)
                     dest = ip;
             }
