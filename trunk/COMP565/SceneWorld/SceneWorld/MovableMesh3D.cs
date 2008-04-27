@@ -138,17 +138,9 @@ namespace SceneWorld
                 move2();
                 return;
             }
-            IndexPair temp;
-            if ((temp = scene.Treasures.treasureWithin(Location, 10)) != null)
-            {
-                treasureCount++;
-                if (name.ToLower().Equals("chaser"))
-                    Trace = "Chaser collects a treasure: " + treasureCount + " Collected out of 4";
-                else
-                    Trace = "Evader collects a treasure: " + treasureCount + " Collected out of 4";
-                
-                scene.Treasures.collectTreasure(temp);
-            }
+
+            scene.Treasures.treasureWithin(Location, 10, this.Name); //checks and displays messages
+            
 
             // need temporary vectors since Properties can't be passed as ref arguments
             Vector3 right = Right, up = Up, at = At, position = Location, positionOld = new Vector3();

@@ -60,7 +60,7 @@ namespace SceneWorld
                 base.move();
 
             }
-            else if (path.Count > 0 || (treasure = scene.Treasures.treasureWithin(Location, 500)) != null)
+            else if (path.Count > 0 || (treasure = scene.Treasures.treasureWithin(Location, 500, "")) != null)
             {
                 if (++currStep == 12)
                     currStep = 0;
