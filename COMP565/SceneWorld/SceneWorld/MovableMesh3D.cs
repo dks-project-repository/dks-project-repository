@@ -139,7 +139,16 @@ namespace SceneWorld
                 return;
             }
 
-            scene.Treasures.treasureWithin(Location, 10, this.Name); //checks and displays messages
+            if (!name.Contains("flock"))
+            {
+                IndexPair temp;
+                if ((temp = scene.Treasures.treasureWithin(Location, 10)) != null)
+                {
+                    scene.Treasures.collectTreasure(temp);
+                    scene.Trace = Name + " collected a treasure: " + ++treasureCount + " collected out of 4";
+                }
+            }
+
             
 
             // need temporary vectors since Properties can't be passed as ref arguments
