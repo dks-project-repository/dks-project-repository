@@ -199,7 +199,7 @@ namespace SceneWorld
                 {
                     if (maze[i, j])
                         drawable.Add(new ModeledMesh3D(this, "maze",
-                            new Vector3(i * 70 + 230, 0, j * 70 - 650),
+                            new Vector3(i * 70 + 260, 0, j * 70 - 650),
                             new Vector3(0, 1, 0), 0, data));
                 }
 
@@ -210,7 +210,7 @@ namespace SceneWorld
                 {
                     if (maze[i, j])
                         drawable.Add(new ModeledMesh3D(this, "maze",
-                            new Vector3(j * 70 - 650, 0, i * 70 + 230),
+                            new Vector3(j * 70 - 650, 0, i * 70 + 260),
                             new Vector3(0, 1, 0), 0, data));
                 }
 
