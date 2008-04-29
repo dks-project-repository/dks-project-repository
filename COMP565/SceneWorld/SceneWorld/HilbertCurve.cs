@@ -52,6 +52,7 @@ namespace SceneWorld
             // Create the path
             HilbertU(level);
 
+            //subdivideCurve((int)(curve[1] - curve[0]).Z / 40);
 
             adjustToTraversables(navgraph);
             createPath(navgraph);
@@ -67,6 +68,29 @@ namespace SceneWorld
             }
             //Unlock the vb before you can use it elsewhere
             vb.Unlock();
+        }
+
+        private void subdivideCurve(int subdivisions)
+        {
+            List<Vector3> newCurve = new List<Vector3>();
+
+            Vector3 last = curve[0];
+            for (int i = 0; i < curve.Count; i++)
+            {
+                Vector3 next = curve[i];
+
+                newCurve.Add(last);
+
+                float subdiv = 1f / subdivisions;
+                for (float lerp = 0; lerp < 1; lerp += subdiv)
+                {
+                    newCurve.Add(Vector3.Lerp(last, next, lerp));
+                }
+
+                last = next;
+            }
+            newCurve.Add(last);
+            curve = newCurve;
         }
 
         private void adjustToTraversables(NavGraph n)
@@ -176,13 +200,14 @@ namespace SceneWorld
                 Console.WriteLine("AStar: Hilbert " + i + " / " + (curve.Count - 1));
                 source = dest;
                 dest = NavGraph.indexFromLocation(curve[i]);
-                AStar(source, dest, n);
+                if (source != dest)
+                    AStar(source, dest, n);
                 path.RemoveAt(path.Count - 1);
             }
         }
 
         private IndexPair AStar(IndexPair curr, IndexPair dest, NavGraph navgraph)
-        {            
+        {
             SortedList<IndexPair, bool> open = new SortedList<IndexPair, bool>(new IndexPair.Comparer());
             SortedList<IndexPair, bool> closed = new SortedList<IndexPair, bool>(new IndexPair.Comparer());
             List<Vector3> path = new List<Vector3>();
