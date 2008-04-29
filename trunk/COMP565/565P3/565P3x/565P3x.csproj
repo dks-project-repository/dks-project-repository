@@ -89,6 +89,9 @@
     <Compile Include="..\565P3\Object3D.cs">
       <Link>Object3D.cs</Link>
     </Compile>
+    <Compile Include="..\565P3\Octree.cs">
+      <Link>Octree.cs</Link>
+    </Compile>
     <Compile Include="..\565P3\PauseScreen.cs">
       <Link>PauseScreen.cs</Link>
     </Compile>

@@ -33,13 +33,13 @@ namespace Game465P3
                     {
                         health = 0;
                         jetFuel = 0;
-                        skiing = false;
+                        skiing = true;
                         dead = true;
                         deadCounter = 0;
                         game.setDamage(1);
                         acceleration = -gravity;
                         tractionForce = Vector3.Zero;
-                        game.oct.Remove(this);
+                        //TODO game.oct.Remove(this);
                     }
                     else
                     {
@@ -99,7 +99,10 @@ namespace Game465P3
             }
 
             if (game.input.IsKeyPressed(Settings.killSelf))
+            {
                 Health = 0;
+                return;
+            }
 
             // Switch weapons
             if (game.input.IsKeyPressed(Settings.switchWeapon) || game.input.IsButtonPressed(Settings.switchWeaponButton))
@@ -224,6 +227,7 @@ namespace Game465P3
 
         protected void respawn()
         {
+            game.oct.Remove(this);
             yaw = pitch = MathHelper.PiOver2;
             transform.Translation = origLocation;
             game.oct.Add(this);
