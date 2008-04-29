@@ -15,19 +15,21 @@ namespace SceneWorld
         private static Matrix matrix;
         private Device device;
         private SceneWorld scene;
+        private int treasureCount;
 
         public TreasureChest(SceneWorld scene, int numTreasures)
         {
+            treasureCount = numTreasures;
             this.scene = scene;
             device = scene.Display;
             matrix = Matrix.RotationX((float)-Math.PI / 2f) * Matrix.Translation(-2000, 10, -2000);
             uncollectedTreasure = new MeshData(scene.Display, "treasure.x");
-            collectedTreasure = new MeshData(scene.Display, "treasure.x");
+            collectedTreasure = new MeshData(scene.Display, "treasurecollected.x");
             treasuresList = new Dictionary<IndexPair, ModeledMesh3D>();
             treasures = new List<IndexPair>();
             collectedTreasures = new List<IndexPair>();
             Random r = new Random();
-            for (int i = 0; i < numTreasures; i++)
+            for (int i = 0; i < treasureCount; i++)
             {
                 IndexPair ip = null;
                 Vector3 loc;
@@ -77,6 +79,11 @@ namespace SceneWorld
         {
             foreach (ModeledMesh3D m in treasuresList.Values)
                 m.draw();
+        }
+
+        public int TreasureCount
+        {
+            get { return treasureCount; }
         }
     }
 }

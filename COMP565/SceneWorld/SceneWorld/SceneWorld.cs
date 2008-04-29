@@ -183,8 +183,8 @@ namespace SceneWorld
             drawable.Add(new ModeledMesh3D(this, "ground", "groundSW.x", "openfootageNETGrassDirt8.jpg"));
             // place modeled mesh at position, provide rotation axis and rotation radians.
             MeshData data = new MeshData(display, "ThemeBuilding.x");
-            drawable.Add(new ModeledMesh3D(this, "ThemeBuilding", new Vector3(349, 0, 349), new Vector3(0, 1, 0), 0, "ThemeBuilding.x"));
-            drawable.Add(new ModeledMesh3D(this, "ThemeBuilding", new Vector3(-349, 0, -349), new Vector3(0, 1, 0), (float)Math.PI / 4f, "ThemeBuilding.x"));
+            //drawable.Add(new ModeledMesh3D(this, "ThemeBuilding", new Vector3(349, 0, 349), new Vector3(0, 1, 0), 0, "ThemeBuilding.x"));
+            //drawable.Add(new ModeledMesh3D(this, "ThemeBuilding", new Vector3(-349, 0, -349), new Vector3(0, 1, 0), (float)Math.PI / 4f, "ThemeBuilding.x"));
             data = new MeshData(display, "box.x", "brick.jpg");
             bool[,] maze = {{true, true, true, true, true, true},
                             {true, false, false, false, false, false},
@@ -249,7 +249,7 @@ namespace SceneWorld
             camera.Add(npAvatar.FollowCamera);
             camera.Add(npAvatar.TopCamera);
             flock = new Flock(this, "flock", "turret.x", 10, 15, .2f, .05f, 60, 5);
-            
+
         }
 
         /// <summary>
@@ -375,6 +375,7 @@ namespace SceneWorld
 
             font.DrawText(null, string.Format("FindingPath:{0:1} StopFindingPath:{1} {2}", avatar.findingPath ? 'T' : 'F', avatar.stopFindingPath ? 'T' : 'F', avatar.findingPathWaitCount),
              new Rectangle(10, 50, 200, 20), DrawTextFormat.NoClip, fontColor);
+            checkwin();
         }
 
         /// <summary>
@@ -551,6 +552,24 @@ namespace SceneWorld
                 case Keys.D: avatar.Yaw = -1; break;
             }
             base.OnKeyDown(kea);
+        }
+
+        protected void checkwin()
+        {
+            if (avatar.Winner)
+            {
+                font.DrawText(null, "YOU ARE VICTORIOUS!!!!", new Rectangle(Size.Width / 2 - 100, Size.Height / 2 - 10, 200, 20), DrawTextFormat.NoClip, fontColor);
+                running = false;
+                fpsTimer.Enabled = false;
+            }
+            if (npAvatar.Winner)
+            {
+                font.DrawText(null, "EVADER IS VICTORIOUS!!!!", new Rectangle(Size.Width / 2 - 100, Size.Height / 2 - 10, 200, 20), DrawTextFormat.NoClip, fontColor);
+                running = false;
+                fpsTimer.Enabled = false;
+            }
+
+
         }
 
         static void Main(string[] args)

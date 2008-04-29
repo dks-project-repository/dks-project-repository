@@ -17,11 +17,13 @@ namespace SceneWorld
     /// </summary>
     public class Avatar : MovableMesh3D
     {
+        
         protected Camera avatarCamera, firstPerson, follow, top;
         // use these as constructor arguments ?
         protected Vector3 firstLocation = new Vector3(0.0f, 15.0f, 0.0f);
         protected Vector3 followLocation = new Vector3(0.0f, 25.0f, -60.0f);
         protected Vector3 topLocation = new Vector3(0.0f, 495.0f, 0.0f);
+        
 
         // Constructor
         public Avatar(SceneWorld sw, string label, Vector3 pos, Vector3 orientAxis,
@@ -58,6 +60,8 @@ namespace SceneWorld
             get { return top; }
         }
 
+
+
         // Methods
 
         public override string ToString()
@@ -85,6 +89,9 @@ namespace SceneWorld
         // Avatars use MovableMesh's move()
         public override void move()
         {
+            if (Vector3.Length(location - scene.npAvatar.Location) < 30 && name.Equals("Chaser"))
+                winner = true;
+
             if (autoMove && !(this is NPAvatar))
                 automove();
             else
@@ -213,6 +220,22 @@ namespace SceneWorld
                         dir = -dir;
                 }
             }
+
+            if (!name.Contains("flock"))
+            {
+                IndexPair temp;
+                if ((temp = scene.Treasures.treasureWithin(Location, 30)) != null)
+                {
+                    scene.Treasures.collectTreasure(temp);
+                    scene.Trace = name + " collected a treasure: " + ++treasureCount + " collected out of 4";
+
+                    lock (path)
+                    path.Clear();
+
+                    if (treasureCount > scene.Treasures.TreasureCount / 2)
+                        winner = true;
+                }
+            }
         }
 
         public Vector3 getWithin(Vector3 loc, float dist)
@@ -242,7 +265,7 @@ namespace SceneWorld
             // If not, check to see if we're near a treasure
             if (dest == null)
             {
-                IndexPair ip = a.scene.Treasures.treasureWithin(a.location, yon, "");
+                IndexPair ip = a.scene.Treasures.treasureWithin(a.location, yon);
                 if (ip != null)
                     dest = ip;
             }

@@ -16,6 +16,7 @@ namespace SceneWorld
 
     public class MovableMesh3D : ModeledMesh3D
     {
+        protected bool winner;
         protected Random random = new Random();
         protected int pitch = 0, roll = 0, yaw = 0;
         protected int steps = 0, vertical = 0;
@@ -33,6 +34,7 @@ namespace SceneWorld
 
         public void initialize()
         {
+            winner = false;
             Right = new Vector3(1.0f, 0.0f, 0.0f);
             Up = new Vector3(0.0f, 1.0f, 0.0f);
             At = new Vector3(0.0f, 0.0f, 1.0f);
@@ -142,10 +144,13 @@ namespace SceneWorld
             if (!name.Contains("flock"))
             {
                 IndexPair temp;
-                if ((temp = scene.Treasures.treasureWithin(Location, 10)) != null)
+                if ((temp = scene.Treasures.treasureWithin(Location, 30)) != null)
                 {
                     scene.Treasures.collectTreasure(temp);
-                    scene.Trace = Name + " collected a treasure: " + ++treasureCount + " collected out of 4";
+                    scene.Trace = name + " collected a treasure: " + ++treasureCount + " collected out of 4";
+
+                    if (treasureCount > scene.Treasures.TreasureCount/2)
+                        winner = true;
                 }
             }
 
@@ -314,5 +319,16 @@ namespace SceneWorld
 
             currStepToNode++;
         }
+
+        public int TreasureCount
+        {
+            get { return treasureCount; }
+        }
+
+        public bool Winner
+        {
+            get { return winner; }
+        }
+
     }
 }
