@@ -111,17 +111,17 @@ namespace Game465P3
             pos -= map.Position;
 
             float p = pos.X;
-            if (p == map.TerrainScale)
+            if (p <= map.TerrainScale)
                 x = -1;
-            else if (p == map.Width - map.TerrainScale)
+            else if (p >= map.Width - map.TerrainScale)
                 x = 1;
             else
                 x = 0;
 
             p = pos.Z;
-            if (p == map.TerrainScale)
+            if (p <= map.TerrainScale)
                 z = -1;
-            else if (p == map.Height - map.TerrainScale)
+            else if (p >= map.Height - map.TerrainScale)
                 z = 1;
             else
                 z = 0;

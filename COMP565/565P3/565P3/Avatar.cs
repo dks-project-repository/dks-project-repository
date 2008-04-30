@@ -152,6 +152,13 @@ namespace Game465P3
                 transform.Translation = w;
                 actualAt = aAt;
             }
+            if (game.input.IsKeyPressed(Keys.F7))
+            {
+                for (int i = 0; i < 200; i++)
+                {
+                    new StraightProjectile(game, this);
+                }
+            }
 
             // yaw is handled in Avatar's matrix
             // pitch is handled in LinkedCamera's matrix
