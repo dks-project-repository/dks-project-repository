@@ -79,7 +79,7 @@ namespace SceneWorld
                 followPath();
                 updateCameras();
             }
-            if (path.Count == 0)
+            else if (path.Count == 0)
             {
                 remoteTurns++;
                 //if (posChange.Length() < .9f)
