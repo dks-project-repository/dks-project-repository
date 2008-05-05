@@ -146,7 +146,7 @@ namespace SceneWorld
                     else
                     {
                         findingPathWaitCount++;
-                        if (findingPathWaitCount == 20)
+                        if (findingPathWaitCount == 51)
                         {
                             // interrupt current pathfinding attempt if it's taking too long
                             lock (path)
@@ -197,9 +197,9 @@ namespace SceneWorld
                 {
                     Vector3 v;
                     if (dir > 0)
-                        v = Vector3.CatmullRom(path[index], path[index + 1], path[index + 2], path[index + 3], currStep / 12f);
+                        v = Vector3.CatmullRom(path[index], path[index + 0], path[index + 1], path[index + 2], currStep / 12f);
                     else
-                        v = Vector3.CatmullRom(path[index], path[index - 1], path[index - 2], path[index - 3], currStep / 12f);
+                        v = Vector3.CatmullRom(path[index], path[index - 0], path[index - 1], path[index - 2], currStep / 12f);
                     Vector3 newAt = v - location;
                     if (newAt.LengthSq() != 0)
                     {
