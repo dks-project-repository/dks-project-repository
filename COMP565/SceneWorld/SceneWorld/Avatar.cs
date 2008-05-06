@@ -135,7 +135,7 @@ namespace SceneWorld
                     int c;
                     lock (path)
                         c = path.Count;
-                    if (c < 7 && !findingPath)
+                    if (c < 5 && !findingPath)
                     {
                         // if not currently finding a path (or near end of it), find one
                         findingPathWaitCount = 0;
@@ -196,10 +196,11 @@ namespace SceneWorld
                 if (dir > 0 && path.Count >= index + 4 || dir < 0 && index >= 3)
                 {
                     Vector3 v;
+
                     if (dir > 0)
-                        v = Vector3.CatmullRom(path[index], path[index + 0], path[index + 1], path[index + 2], currStep / 12f);
+                        v = Vector3.CatmullRom(path[index] - At, path[index], path[index + 1], path[index + 2], currStep / 12f);
                     else
-                        v = Vector3.CatmullRom(path[index], path[index - 0], path[index - 1], path[index - 2], currStep / 12f);
+                        v = Vector3.CatmullRom(path[index] - At, path[index], path[index - 1], path[index - 2], currStep / 12f);
                     Vector3 newAt = v - location;
                     if (newAt.LengthSq() != 0)
                     {
@@ -422,6 +423,12 @@ namespace SceneWorld
                 a.findingPath = false;
             }
             closed.Clear();
+            path.Clear();
+        }
+
+        public override void reset()
+        {
+            base.reset();
             path.Clear();
         }
     }
