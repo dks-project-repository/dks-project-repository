@@ -53,7 +53,6 @@ namespace SceneWorld
                 }
                 loc = NavGraph.locationFromIndex(ip);
                 treasuresList.Add(ip, new ModeledMesh3D(scene, "uncollected treasure", loc, new Vector3(0, 1, 0), 0, uncollectedTreasure));
-                Console.WriteLine(loc.X + "," + loc.Z);
                 treasures.Add(ip);
             }
         }

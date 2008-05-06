@@ -107,9 +107,11 @@ namespace SceneWorld
 
         // Methods
 
-        public void reset()
+        public virtual void reset()
         {
             initialize();
+            treasureCount = 0;
+            winner = false;
         }
 
         /// <summary>

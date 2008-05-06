@@ -74,6 +74,7 @@ namespace SceneWorld
         public TreasureChest Treasures { get { return treasures; } }
         public HilbertCurve hilbert;
         public Flock flock;
+        private PresentParameters pp;
 
         // Constructor
         public SceneWorld()
@@ -142,7 +143,7 @@ namespace SceneWorld
 
         public void InitializeGraphics()
         {
-            PresentParameters pp = new PresentParameters();
+            pp = new PresentParameters();
             pp.Windowed = true;
             pp.SwapEffect = SwapEffect.Discard;
             pp.AutoDepthStencilFormat = DepthFormat.D16;
@@ -252,6 +253,15 @@ namespace SceneWorld
 
         }
 
+        public void ResetScene()
+        {
+            avatar.Location = new Vector3(0, 0, 100);
+            avatar.reset();
+            npAvatar.Location = new Vector3(100, 0, -200);
+            npAvatar.reset();
+            treasures = new TreasureChest(this, 4);
+        }
+
         /// <summary>
         /// Set Vertex Fog parameters
         /// </summary>
@@ -333,6 +343,8 @@ namespace SceneWorld
             {  // game loop -- quit with window close
                 Render(null, null);
                 Application.DoEvents();
+                if (avatar.Winner || npAvatar.Winner)
+                    ResetScene();
             }
         }
 
@@ -375,7 +387,7 @@ namespace SceneWorld
 
             font.DrawText(null, string.Format("FindingPath:{0:1} StopFindingPath:{1} {2}", avatar.findingPath ? 'T' : 'F', avatar.stopFindingPath ? 'T' : 'F', avatar.findingPathWaitCount),
              new Rectangle(10, 50, 200, 20), DrawTextFormat.NoClip, fontColor);
-            checkwin();
+            checkWin();
         }
 
         /// <summary>
@@ -502,6 +514,10 @@ namespace SceneWorld
             {
                 hilbertDraw = !hilbertDraw;
             }
+            else if (kea.KeyCode == Keys.R)
+            {
+                ResetScene();
+            }
             /*  
             // We aren't using these in our assignment ... but there are here for interest
             else if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
@@ -554,7 +570,7 @@ namespace SceneWorld
             base.OnKeyDown(kea);
         }
 
-        protected void checkwin()
+        protected void checkWin()
         {
             if (avatar.Winner)
             {
