@@ -45,7 +45,7 @@ namespace SceneWorld
             IndexPair treasure = null;
             oldPos = Location;
 
-            
+
 
             if (distance.Length() < 500 && distance.LengthSq() != 0)
             {
@@ -104,6 +104,8 @@ namespace SceneWorld
             //TODO: use quaternions
             rightFeeler = Vector3.TransformNormal(At, mr) * 10;
             leftFeeler = Vector3.TransformNormal(At, ml) * 10;
+            rightFeeler.Y += 5;
+            leftFeeler.Y += 5;
             bool left = scene.NavGraph.isTraversable(NavGraph.indexFromLocation(Location + rightFeeler));
             bool right = scene.NavGraph.isTraversable(NavGraph.indexFromLocation(Location + leftFeeler));
             bool fwd = scene.NavGraph.isTraversable(NavGraph.indexFromLocation(Location + At * 10));
@@ -125,7 +127,7 @@ namespace SceneWorld
         {
             base.draw();
             Matrix temp = display.Transform.World;  // save Transform state
-            display.Transform.World = orientation * Matrix.Translation(rightFeeler);
+            display.Transform.World = Matrix.RotationY((float)Math.PI) * orientation * Matrix.Translation(rightFeeler);
             display.SetTexture(0, null);
             display.Material = tpm;
             tp.DrawSubset(0);
