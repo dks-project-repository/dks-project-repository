@@ -148,7 +148,8 @@ namespace SceneWorld
             pp.SwapEffect = SwapEffect.Discard;
             pp.AutoDepthStencilFormat = DepthFormat.D16;
             pp.EnableAutoDepthStencil = true;
-            //pp.PresentationInterval = PresentInterval.Immediate;
+            pp.PresentationInterval = PresentInterval.Immediate;
+
             try
             {
                 display = new Device(0, DeviceType.Hardware, this, CreateFlags.HardwareVertexProcessing, pp);
@@ -330,6 +331,7 @@ namespace SceneWorld
                 display.Lights[0].Enabled = true;
                 display.Lights[1].Enabled = spotlight;
                 display.RenderState.Ambient = Color.DarkGray;
+                SetupVertexFog(Color.LightSkyBlue, FogMode.Linear, false, 0.08f);
             }
         }
 
