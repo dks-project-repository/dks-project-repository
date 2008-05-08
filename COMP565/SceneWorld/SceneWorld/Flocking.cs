@@ -29,7 +29,7 @@ namespace SceneWorld
             for (int i = 0; i < numBoids; i++)
             {
                 Vector3 blah = new Vector3((float)(rand.NextDouble() * 2 - 1), 0, (float)(rand.NextDouble() * 2 - 1));
-                boids.Add(new Boid(sw, label + i, avatar.Location + blah * crossoverRadius, avatar.Up, (float)rand.NextDouble(), meshFile, this));
+                boids.Add(new Boid(sw, label + i, avatar.Location + blah * (crossoverRadius * 4), avatar.Up, (float)rand.NextDouble(), meshFile, this));
             }
         }
 
