@@ -21,8 +21,10 @@
  *    'd'     Turn right
  *    Arrows  Auto-move/turn
  * 
- * Mike Barnes 2/11/2008
- * Steven Barnett 3/12/2008
+ * Mike Barnes
+ * Steven Barnett
+ * Daniel Frankel
+ * Kevin Yedlin
  */
 
 // Be sure to also add the referece "Microsoft.DirectX.Direct3DX" 
