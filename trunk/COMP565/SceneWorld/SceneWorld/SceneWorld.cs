@@ -107,9 +107,9 @@ namespace SceneWorld
             // renderTimer.Enabled = true;
             //Trace = "To start game, press 's' in Scene World window";
 
-            display.RenderState.Ambient = Color.DarkGray;
+            display.RenderState.Ambient = Color.LightGray;
             display.Lights[0].Type = LightType.Directional;
-            display.Lights[0].Diffuse = Color.LightGray;
+            display.Lights[0].Diffuse = Color.White;
             display.Lights[0].Specular = Color.LightGray;
             //display.Lights[0].Direction = new Vector3(.4f, -.7f, .3f);
             display.Lights[0].Direction = new Vector3(.4f, 0, .3f);
@@ -164,6 +164,9 @@ namespace SceneWorld
             // renderState.FillMode = FillMode.WireFrame;
             SetupVertexFog(Color.LightSkyBlue, FogMode.Linear, false, 0.08f);
             display.SamplerState[0].MipFilter = TextureFilter.Anisotropic;
+            display.SamplerState[0].MagFilter = TextureFilter.Anisotropic;
+            display.SamplerState[0].MinFilter = TextureFilter.Anisotropic;
+            display.SamplerState[0].MaxAnisotropy = 8;
         }
 
         // create meshes, avatars, cameras.
@@ -250,7 +253,7 @@ namespace SceneWorld
             camera.Add(npAvatar.FirstPerson);
             camera.Add(npAvatar.FollowCamera);
             camera.Add(npAvatar.TopCamera);
-            flock = new Flock(this, "flock", "turret.x", 10, 15, .2f, .05f, 60, 5);
+            flock = new Flock(this, "flock", "turret.x", 10, 30, .2f, .05f, 80, 1.55555555f);
 
         }
 
@@ -330,8 +333,12 @@ namespace SceneWorld
             {
                 display.Lights[0].Enabled = true;
                 display.Lights[1].Enabled = spotlight;
-                display.RenderState.Ambient = Color.DarkGray;
+                display.RenderState.Ambient = Color.LightGray;
                 SetupVertexFog(Color.LightSkyBlue, FogMode.Linear, false, 0.08f);
+                display.SamplerState[0].MipFilter = TextureFilter.Anisotropic;
+                display.SamplerState[0].MagFilter = TextureFilter.Anisotropic;
+                display.SamplerState[0].MinFilter = TextureFilter.Anisotropic;
+                display.SamplerState[0].MaxAnisotropy = 8;
             }
         }
 
