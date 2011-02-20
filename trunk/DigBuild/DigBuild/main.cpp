@@ -1,8 +1,12 @@
+#include "Cube.h"
+
 #include <SDL.h>
 #include <SDL_opengl.h>
 
 #include <math.h>
-#define PI (3.141592653589793238)
+#include <stdio.h>
+
+const float PI = 3.141592653589793238f;
 
 bool isQuit = false;
 bool isPaused = false;
@@ -13,55 +17,30 @@ int screenAltWidth = 0;
 int screenAltHeight = 0;
 bool screenIsFull = false;
 
-float test = 0.0f;
+int test = 0;
 int stepNum = 0;
 
+const float numCubes = 2;
+Cube* Cubes[2];
 
-float smoothStepC2(float min, float max, float x)
-{
-	x = (x - min) / (max - min);
-	float PI2 = 2 * PI;
-	return x - sin(x * PI2) / PI2;
-}
+const float cameraRotStep = PI / 180.0f;
+float cameraRot = 0;
+Vector3 cameraPos = Vector3(0, 0, -12);
 
-float smoothStepC1(float min, float max, float x)
-{
-	x = (x - min) / (max - min);
-	return x * x * (3 - 2 * x);
-}
-
-float lerp(float min, float max, float x)
-{
-	return (x - min) / (max - min);
-}
+unsigned int drawMode;
 
 void draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+	
+	glTranslatef(cameraPos.X(), cameraPos.Y(), cameraPos.Z());
+	glRotatef(cameraRot, 0, 1, 0);
 
-	glTranslatef(-1.20710678f, test, -6.0f);
-
-	glBegin(GL_TRIANGLES);
-	glColor3f ( 1.0f, 0.0f, 0.0f);
-	glVertex3f( 0.0f, 1.0f, 0.0f);
-	glColor3f ( 0.0f, 1.0f, 0.0f);
-	glVertex3f(-1.20710678f, -1.0f, 0.0f);
-	glColor3f ( 0.0f, 0.0f, 1.0f);
-	glVertex3f( 1.20710678f, -1.0f, 0.0f);
-	glEnd();							
-
-	glTranslatef(2.41421356f, -2 * test, 0.0f);
-	glColor3f(0.5f, 0.5f, 0.5f);
-
-	glBegin(GL_TRIANGLES);
-	glColor3f ( 1.0f, 0.0f, 0.0f);
-	glVertex3f( 0.0f, -1.0f, 0.0f);
-	glColor3f ( 0.0f, 0.0f, 1.0f);
-	glVertex3f(-1.20710678f, 1.0f, 0.0f);
-	glColor3f ( 0.0f, 1.0f, 0.0f);
-	glVertex3f( 1.20710678f, 1.0f, 0.0f);
-	glEnd();										
+	for (int i = 0; i < numCubes; i++)
+	{
+		Cubes[i]->Draw(drawMode);
+	}
 
 	SDL_GL_SwapBuffers();
 }
@@ -110,7 +89,7 @@ bool init()
 			screenAltHeight = modes[i]->h;
 	}
 
-	SDL_WM_SetCaption("Toroid Race", 0);
+	SDL_WM_SetCaption("Dig Build", 0);
 
 	if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) != 0)
 		return false;
@@ -119,6 +98,7 @@ bool init()
 		return false;
 
 	SDL_ShowCursor(SDL_DISABLE);
+	SDL_EnableKeyRepeat(10, 10);
 
 	return true;
 }
@@ -127,9 +107,12 @@ bool init()
 
 void tick()
 {
-	const double step = PI / 100;
-	test = sin(step * stepNum);
-	stepNum++;
+	const int step = 1;
+	test += step;
+	test %= 360;
+
+	Cubes[0]->SetRot(Vector3(0, test, 0));
+	Cubes[1]->SetRot(Vector3(0, -test, 0));
 }
 
 
@@ -161,6 +144,35 @@ void handleInput()
 			case SDLK_p:
 				isPaused = !isPaused;
 				break;
+			case SDLK_r:
+				if (drawMode == GL_QUADS)
+				{
+					drawMode = GL_LINE_LOOP;
+				}
+				else
+				{
+					drawMode = GL_QUADS;
+				}
+			break;
+			// Camera Controls
+			case SDLK_w:
+				cameraPos = Vector3(cameraPos.X() + 1 * sin(cameraRot), cameraPos.Y(), cameraPos.Z() + 1 * cos(cameraRot));
+				break;
+			case SDLK_s:
+				cameraPos = Vector3(cameraPos.X() - 1 * sin(cameraRot), cameraPos.Y(), cameraPos.Z() - 1 * cos(cameraRot));
+				break;
+			case SDLK_a:
+				cameraRot -= cameraRotStep;
+				break;
+			case SDLK_d:
+				cameraRot += cameraRotStep;
+				break;
+			case SDLK_q:
+				cameraPos = Vector3(cameraPos.X(), cameraPos.Y() - 1, cameraPos.Z());
+				break;
+			case SDLK_e:
+				cameraPos = Vector3(cameraPos.X(), cameraPos.Y() + 1, cameraPos.Z());
+				break;
 			}
 		}
 	}
@@ -173,6 +185,11 @@ int main(int argc, char* args[])
 
 	const Uint32 tickMs = 1000 / 60;
 	Uint32 next = SDL_GetTicks() + tickMs;
+
+	drawMode = GL_QUADS;
+
+	Cubes[0] = new Cube(Vector3(-sqrt(2.0f), 0, 0), 0xff0000);
+	Cubes[1] = new Cube(Vector3(sqrt(2.0f), 0, 0), 0x0000ff);
 
 	while (!isQuit)
 	{
@@ -193,8 +210,7 @@ int main(int argc, char* args[])
 
 		draw();
 
-		while (next > SDL_GetTicks())
-			;
+		while (next > SDL_GetTicks());
 	}
 
 	SDL_Quit();
