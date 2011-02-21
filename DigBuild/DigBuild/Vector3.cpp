@@ -13,6 +13,11 @@ Vector3::Vector3(float xx, float yy, float zz)
   z = zz;
 }
 
+float Vector3::length()
+{
+  return sqrtf(x * x + y * y + z * z);
+}
+
 Vector3 Vector3::normalize()
 {
   float length = sqrtf(x * x + y * y + z * z);
@@ -53,6 +58,20 @@ Vector3 Vector3::operator -(Vector3& v)
     y - v.y,
     z - v.z
     );
+}
+
+void Vector3::operator +=(Vector3& v)
+{
+    x += v.x;
+    y += v.y;
+    z += v.z;
+}
+
+void Vector3::operator -=(Vector3& v)
+{
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
 }
 
 float* Vector3::get3f(float* arr)

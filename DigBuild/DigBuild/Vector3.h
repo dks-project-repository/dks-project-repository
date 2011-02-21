@@ -4,11 +4,14 @@ public:
   Vector3();
   Vector3(float xx, float yy, float zz);
 
+  float length();
   Vector3 normalize();
   float dot(Vector3& v);
   Vector3 cross(Vector3& v);
   Vector3 operator +(Vector3& v);
   Vector3 operator -(Vector3& v);
+  void operator +=(Vector3& v);
+  void operator -=(Vector3& v);
   float* get3f(float* arr);
 
 	float X()		{ return x; }
