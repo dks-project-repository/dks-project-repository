@@ -1,17 +1,64 @@
 #include "Vector3.h"
+#include <math.h>
 
 Vector3::Vector3()
 {
-	xyz[0] = xyz[1] =xyz[2] = 0;
+  x = y = z = 0;
 }
 
-Vector3::Vector3(float x, float y, float z)
+Vector3::Vector3(float xx, float yy, float zz)
 {
-	xyz[0] = x;
-	xyz[1] = y;
-	xyz[2] = z;
+  x = xx;
+  y = yy;
+  z = zz;
 }
 
-Vector3::~Vector3()
+Vector3 Vector3::normalize()
 {
+  float length = sqrtf(x * x + y * y + z * z);
+  if (length == 0)
+  {
+    return Vector3(0, 0, 0);
+  }
+  return Vector3(x / length, y / length, z / length);
+}
+
+float Vector3::dot(Vector3& v)
+{
+  return x * v.x + y * v.y + z * v.z;
+}
+
+Vector3 Vector3::cross(Vector3& v)
+{
+  return Vector3(
+    y * v.z - z * v.y,
+    z * v.x - x * v.z,
+    x * v.y - y * v.x
+    );
+}
+
+Vector3 Vector3::operator +(Vector3& v)
+{
+  return Vector3(
+    x + v.x,
+    y + v.y,
+    z + v.z
+    );
+}
+
+Vector3 Vector3::operator -(Vector3& v)
+{
+  return Vector3(
+    x - v.x,
+    y - v.y,
+    z - v.z
+    );
+}
+
+float* Vector3::get3f(float* arr)
+{
+  arr[0] = x;
+  arr[1] = y;
+  arr[2] = z;
+  return arr;
 }
