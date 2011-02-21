@@ -1,14 +1,19 @@
 class Vector3
 {
 public:
-	Vector3();
-	Vector3(float x, float y, float z);
-	~Vector3();
-	
-	float X()		{ return xyz[0]; }
-	float Y()		{ return xyz[1]; }
-	float Z()		{ return xyz[2]; }
+  Vector3();
+  Vector3(float xx, float yy, float zz);
 
+  Vector3 normalize();
+  float dot(Vector3& v);
+  Vector3 cross(Vector3& v);
+  Vector3 operator +(Vector3& v);
+  Vector3 operator -(Vector3& v);
+  float* get3f(float* arr);
+
+	float X()		{ return x; }
+	float Y()		{ return y; }
+	float Z()		{ return z; }
 private:
-	float xyz[3];
+  float x, y, z;
 };
