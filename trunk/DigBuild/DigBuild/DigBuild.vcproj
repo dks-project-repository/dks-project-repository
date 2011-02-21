@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Users\Dan\Documents\Visual Studio 2008\Projects\DigBuild\SDL\include&quot;"
+				AdditionalIncludeDirectories="&quot;..\SDL\include&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDLmain.lib opengl32.lib glu32.lib SDL_image.lib"
-				AdditionalLibraryDirectories="&quot;C:\Users\Dan\Documents\Visual Studio 2008\Projects\DigBuild\SDL\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\SDL\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
