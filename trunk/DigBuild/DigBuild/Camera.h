@@ -22,4 +22,5 @@ private:
   Vector3 position;
   float rotation;
   movement_t movement;
+  Uint8 mouseLook;
 };

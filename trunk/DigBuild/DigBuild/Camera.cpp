@@ -1,5 +1,10 @@
 #include "Camera.h"
+#include "Screen.h"
 #include <math.h>
+
+#define MOUSELOOK_DISABLED 0
+#define MOUSELOOK_ENABLED  1
+#define MOUSELOOK_WARPING  2
 
 const float PIOVER180 = 0.01745329251994329576923690768489f;
 
@@ -14,6 +19,8 @@ Camera::Camera()
   movement.rotateRight = false;
   movement.up = false;
   movement.down = false;
+
+  mouseLook = false;
 }
 
 void Camera::HandleInput(const SDL_Event& event)
@@ -40,6 +47,26 @@ void Camera::HandleInput(const SDL_Event& event)
       case SDLK_e:
         movement.down = event.type == SDL_KEYDOWN ? 1 : 0;
         break;
+      case SDLK_m:
+        if (event.type == SDL_KEYDOWN)
+        {
+          mouseLook = mouseLook ? MOUSELOOK_DISABLED : MOUSELOOK_ENABLED;
+          SDL_GrabMode(mouseLook ? SDL_GRAB_ON : SDL_GRAB_OFF);
+        }
+        break;
+    }
+  }
+  else if (mouseLook && event.type == SDL_MOUSEMOTION)
+  {
+    if (mouseLook == MOUSELOOK_ENABLED)
+    {
+      rotation += -0.2f * event.motion.xrel;
+      mouseLook = MOUSELOOK_WARPING;
+      SDL_WarpMouse(Screen::Width / 2, Screen::Height / 2);
+    }
+    else
+    {
+      mouseLook = MOUSELOOK_ENABLED;
     }
   }
 }

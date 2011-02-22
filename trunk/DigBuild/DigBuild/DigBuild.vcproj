@@ -194,6 +194,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Screen.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Screen.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Vector3.cpp"
 				>
 			</File>
