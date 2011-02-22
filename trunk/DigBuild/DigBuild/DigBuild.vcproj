@@ -170,11 +170,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Camera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Camera.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Cube.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Cube.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Interfaces.h"
 				>
 			</File>
 			<File
