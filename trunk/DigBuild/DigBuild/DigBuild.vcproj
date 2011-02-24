@@ -194,11 +194,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Player.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Player.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Screen.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Screen.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utils.h"
 				>
 			</File>
 			<File
