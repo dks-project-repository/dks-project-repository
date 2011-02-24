@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "Player.h"
 #include "Cube.h"
 #include "Interfaces.h"
 #include "Screen.h"
@@ -96,10 +96,10 @@ void handleInput()
 
 void buildScene()
 {
-	Camera* camera = new Camera();
-  inputables.push_back(camera);
-  movables.push_back(camera);
-  drawables.push_back(camera);
+  Player* player = new Player();
+  inputables.push_back(player);
+  movables.push_back(player);
+  drawables.push_back(player);
   
   Cube* cube = new Cube(Vector3(-sqrt(2.0f), 0, 0), 0xff0000);
   cube->RotateDirection = 1;
@@ -107,7 +107,7 @@ void buildScene()
   movables.push_back(cube);
   drawables.push_back(cube);
 
-	cube = new Cube(Vector3(sqrt(2.0f), 0, 0), 0x0000ff);
+  cube = new Cube(Vector3(sqrt(2.0f), 0, 0), 0x0000ff);
   cube->RotateDirection = -1;
   inputables.push_back(cube);
   movables.push_back(cube);
