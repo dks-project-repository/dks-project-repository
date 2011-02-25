@@ -1,29 +1,23 @@
 #include "Player.h"
 #include "Cube.h"
-#include "Interfaces.h"
+#include "EventHandler.h"
 #include "Screen.h"
 
 #include <math.h>
 #include <vector>
 
-const float PI = 3.141592653589793238f;
-
 bool isQuit = false;
 bool isPaused = false;
-
-std::vector<Drawable*> drawables;
-std::vector<Movable*> movables;
-std::vector<Inputable*> inputables;
 
 void draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-  int size = drawables.size();
-  for (int i = 0; i < size; i++)
+  std::vector<Drawable*>::iterator it;
+  for (it=ObjectLists::drawables.begin(); it < ObjectLists::drawables.end(); it++)
   {
-    drawables[i]->Draw();
+    (*it)->Draw();
   }
 
 	SDL_GL_SwapBuffers();
@@ -39,12 +33,8 @@ bool init()
 	if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) != 0)
 		return false;
 
-  drawables = std::vector<Drawable*>();
-  movables = std::vector<Movable*>();
-  inputables = std::vector<Inputable*>();
-
   Screen* screen = new Screen();
-  inputables.push_back(screen);
+  screen->Add();
 
   if (!Screen::Resize())
 		return false;
@@ -56,17 +46,22 @@ bool init()
 
 void update(unsigned int numTicks)
 {
-  int size = movables.size();
+  int size = ObjectLists::movables.size();
   for (int i = 0; i < size; i++)
   {
-    movables[i]->Update(numTicks);
+    ObjectLists::movables[i]->Update(numTicks);
+  }
+  
+  std::vector<Movable*>::iterator it;
+  for (it=ObjectLists::movables.begin(); it < ObjectLists::movables.end(); it++)
+  {
+    (*it)->Update(numTicks);
   }
 }
 
 void handleInput()
 {
 	SDL_Event event;
-  int size = inputables.size();
 
 	while (SDL_PollEvent(&event))
 	{
@@ -87,9 +82,10 @@ void handleInput()
       }
     }
 
-    for (int i = 0; i < size; i++)
+    std::vector<Inputable*>::iterator it;
+    for (it=ObjectLists::inputables.begin(); it < ObjectLists::inputables.end(); it++)
     {
-      inputables[i]->HandleInput(event);
+      (*it)->HandleInput(event);
     }
   }
 }
@@ -97,21 +93,15 @@ void handleInput()
 void buildScene()
 {
   Player* player = new Player();
-  inputables.push_back(player);
-  movables.push_back(player);
-  drawables.push_back(player);
+  player->Add();
   
   Cube* cube = new Cube(Vector3(-sqrt(2.0f), 0, 0), 0xff0000);
   cube->RotateDirection = 1;
-  inputables.push_back(cube);
-  movables.push_back(cube);
-  drawables.push_back(cube);
+  cube->Add();
 
   cube = new Cube(Vector3(sqrt(2.0f), 0, 0), 0x0000ff);
   cube->RotateDirection = -1;
-  inputables.push_back(cube);
-  movables.push_back(cube);
-  drawables.push_back(cube);
+  cube->Add();
 }
 
 int main(int argc, char* args[])

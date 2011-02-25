@@ -1,5 +1,5 @@
 #pragma once
-#include "Interfaces.h"
+#include "EventHandler.h"
 
 class Screen : public Inputable
 {
