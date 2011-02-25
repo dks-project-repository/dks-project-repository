@@ -186,7 +186,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Interfaces.h"
+				RelativePath=".\EventHandler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EventHandler.h"
 				>
 			</File>
 			<File

@@ -1,5 +1,5 @@
 #pragma once
-#include "Interfaces.h"
+#include "EventHandler.h"
 #include <SDL_opengl.h>
 
 class Cube : public Movable, public Inputable
