@@ -31,7 +31,7 @@ bool Screen::Resize()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45.0, static_cast<double>(w) / static_cast<double>(h), 0.1, 100.0);
+	gluPerspective(45.0, static_cast<double>(w) / static_cast<double>(h), 0.1, 1000.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

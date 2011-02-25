@@ -22,7 +22,7 @@ protected:
   //http://gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation
 };
 
-class Movable : public virtual Drawable
+class Movable : public Drawable
 {
 public:
   virtual void Update(unsigned int ticks) = 0;

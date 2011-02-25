@@ -9,6 +9,16 @@ struct movement_t {
   bool rotateRight:1;
   bool up:1;
   bool down:1;
+  bool strafeLeft:1;
+  bool strafeRight:1;
+};
+
+enum MouseLook
+{
+  MOUSELOOK_DISABLED,
+  MOUSELOOK_ENABLED,
+  MOUSELOOK_WARPING,
+  MOUSELOOK_SUSPENDED
 };
 
 class Player : public Inputable, public Movable
@@ -23,7 +33,9 @@ private:
 	Vector3 position;
 	float rotation;
 	movement_t movement;
-	Uint8 mouseLook;
+	MouseLook mouseLook;
 
 	Camera camera;
+
+  void setMouseLook(MouseLook state);
 };

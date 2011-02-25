@@ -6,6 +6,10 @@
 #include <math.h>
 #include <vector>
 
+#ifdef _WIN32
+#include <SDL_syswm.h>
+#endif
+
 bool isQuit = false;
 bool isPaused = false;
 
@@ -23,6 +27,18 @@ void draw()
 	SDL_GL_SwapBuffers();
 }
 
+int myEventFilter(const SDL_Event* event)
+{
+#ifdef _WIN32
+  if (event->type == SDL_SYSWMEVENT && event->syswm.msg->msg != WM_NCACTIVATE)
+  {
+    return 0;
+  }
+#endif
+
+  return 1;
+}
+
 bool init()
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
@@ -33,13 +49,13 @@ bool init()
 	if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) != 0)
 		return false;
 
+  SDL_SetEventFilter(myEventFilter);
+
   Screen* screen = new Screen();
   screen->Add();
 
   if (!Screen::Resize())
 		return false;
-
-	SDL_ShowCursor(SDL_DISABLE);
 
 	return true;
 }
