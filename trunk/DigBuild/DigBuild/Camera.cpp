@@ -24,12 +24,12 @@ void Camera::Draw()
             0.0, 1.0, 0.0);
 }
 
-void Camera::SetPosition(Vector3& pos)
+void Camera::SetPosition(const Vector3& pos)
 {
 	position = pos;
 }
 
-Vector3& Camera::GetPosition()
+const Vector3& Camera::GetPosition()
 {
 	return position;
 }

@@ -28,12 +28,12 @@ Vector3 Vector3::normalize()
   return Vector3(x / length, y / length, z / length);
 }
 
-float Vector3::dot(Vector3& v)
+float Vector3::dot(const Vector3& v)
 {
   return x * v.x + y * v.y + z * v.z;
 }
 
-Vector3 Vector3::cross(Vector3& v)
+Vector3 Vector3::cross(const Vector3& v)
 {
   return Vector3(
     y * v.z - z * v.y,
@@ -42,7 +42,7 @@ Vector3 Vector3::cross(Vector3& v)
     );
 }
 
-Vector3 Vector3::operator +(Vector3& v)
+Vector3 Vector3::operator +(const Vector3& v)
 {
   return Vector3(
     x + v.x,
@@ -51,7 +51,7 @@ Vector3 Vector3::operator +(Vector3& v)
     );
 }
 
-Vector3 Vector3::operator -(Vector3& v)
+Vector3 Vector3::operator -(const Vector3& v)
 {
   return Vector3(
     x - v.x,
@@ -60,14 +60,14 @@ Vector3 Vector3::operator -(Vector3& v)
     );
 }
 
-void Vector3::operator +=(Vector3& v)
+void Vector3::operator +=(const Vector3& v)
 {
     x += v.x;
     y += v.y;
     z += v.z;
 }
 
-void Vector3::operator -=(Vector3& v)
+void Vector3::operator -=(const Vector3& v)
 {
     x -= v.x;
     y -= v.y;

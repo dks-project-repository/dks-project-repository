@@ -9,10 +9,10 @@ public:
 	void Draw();
 
 	void SetRotation(float rot);
-	void SetPosition(Vector3& pos);
+	void SetPosition(const Vector3& pos);
 
 	float GetRotation();	
-	Vector3& GetPosition();
+	const Vector3& GetPosition();
 
 private:
 	//TODO: use a matrix instead.
