@@ -26,7 +26,7 @@ public:
 private:
 	unsigned int m_uColor;
   unsigned int drawMode;
-  float yaw;
+  float rotation;
 
 	Vector3 m_rPos;
 	Vector3 m_rRot;

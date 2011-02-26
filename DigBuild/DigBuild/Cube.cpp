@@ -9,7 +9,7 @@ Cube::Cube(Vector3 pos, unsigned int color)
 
   drawMode = GL_QUADS;
   RotateDirection = 1;
-  yaw = 0;
+  rotation = 0;
 }
 
 Cube::~Cube()
@@ -35,11 +35,11 @@ void Cube::Update(unsigned int ticks)
 {
   float rotateStep = RotateDirection * 0.1f * ticks;
 
-	yaw += rotateStep;
-  while (yaw >= 360)
-	  yaw -= 360;
+	rotation += rotateStep;
+  while (rotation >= 360)
+	  rotation -= 360;
 
-	SetRot(Vector3(0, yaw, 0));
+	SetRot(Vector3(0, rotation, 0));
 }
 
 void Cube::Draw()
