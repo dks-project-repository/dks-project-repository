@@ -11,7 +11,8 @@ Player::Player() :
 camera()
 {
   position = Vector3(0, 0, -20);
-  rotation = 0.0f;
+  yaw = 0.0f;
+  pitch = 0.0f;
 
   movement.forward = false;
   movement.backward = false;
@@ -67,7 +68,16 @@ void Player::HandleInput(const SDL_Event& event)
   {
     if (mouseLook == MOUSELOOK_ENABLED)
     {
-      rotation += -0.2f * event.motion.xrel;
+      yaw += -0.2f * event.motion.xrel;
+      pitch += -0.2f * event.motion.yrel;
+      if (pitch > 89.9f)
+      {
+        pitch = 89.9f;
+      }
+      else if (pitch < -89.9f)
+      {
+        pitch = -89.9f;
+      }
     }
     else if (mouseLook == MOUSELOOK_WARPING)
     {
@@ -120,13 +130,13 @@ void Player::Update(unsigned int ticks)
   }
   //if (movement.rotateLeft)
   //{
-  //	rotation += rotateStep;
+  //	yaw += rotateStep;
   //}
   //if (movement.rotateRight)
   //{
-  //	rotation -= rotateStep;
+  //	yaw -= rotateStep;
   //}
-  Vector3 lookDirection = Vector3(sin(rotation * Utils::PIOVER180), 0, cos(rotation * Utils::PIOVER180));
+  Vector3 lookDirection = Vector3(sin(yaw * Utils::PIOVER180), 0, cos(yaw * Utils::PIOVER180));
   Vector3 sideDirection = lookDirection.cross(Vector3(0, 1, 0));
   if (movement.forward)
   {
@@ -145,8 +155,9 @@ void Player::Update(unsigned int ticks)
     position -= sideDirection;
   }
 
-  camera.SetRotation(rotation);
+  camera.SetYaw(yaw);
   camera.SetPosition(position);
+  camera.SetPitch(pitch);
 
   camera.Update(ticks);
 }

@@ -31,7 +31,8 @@ public:
 
 private:
 	Vector3 position;
-	float rotation;
+	float yaw;
+  float pitch;
 	movement_t movement;
 	MouseLook mouseLook;
 

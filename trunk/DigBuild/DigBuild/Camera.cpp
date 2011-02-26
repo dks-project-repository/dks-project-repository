@@ -6,7 +6,8 @@
 Camera::Camera()
 {
   position = Vector3();
-  rotation = 0.0f;
+  yaw = 0.0f;
+  pitch = 0.0f;
 }
 
 
@@ -17,7 +18,9 @@ void Camera::Update(unsigned int ticks)
 
 void Camera::Draw()
 {
-  Vector3 lookDirection = Vector3(sin(rotation * Utils::PIOVER180), 0, cos(rotation * Utils::PIOVER180));
+  Vector3 lookDirection = Vector3(sin(yaw * Utils::PIOVER180) * cos(pitch * Utils::PIOVER180),
+                                  sin(pitch * Utils::PIOVER180),
+                                  cos(yaw * Utils::PIOVER180) * cos(pitch * Utils::PIOVER180));
   lookDirection += position;
   gluLookAt(position.X(), position.Y(), position.Z(),
             lookDirection.X(), lookDirection.Y(), lookDirection.Z(),
@@ -34,12 +37,22 @@ const Vector3& Camera::GetPosition()
 	return position;
 }
 
-void Camera::SetRotation(float rot)
+void Camera::SetYaw(float rot)
 {
-	rotation = rot;
+	yaw = rot;
 }
 
-float Camera::GetRotation()
+float Camera::GetYaw()
 {
-	return rotation;
+	return yaw;
+}
+
+void Camera::SetPitch(float pit)
+{
+	pitch = pit;
+}
+
+float Camera::GetPitch()
+{
+	return pitch;
 }
