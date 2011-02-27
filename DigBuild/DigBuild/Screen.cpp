@@ -1,10 +1,14 @@
 #include "Screen.h"
+#if _WIN32
+#include "wglext.h"
+#endif
 
 int Screen::Width = 800;
 int Screen::Height = 600;
 int Screen::FullWidth;
 int Screen::FullHeight;
 bool Screen::Fullscreen = false;
+Uint32 Screen::MaxFpsInverse = 1000 / 60;
 
 Screen::Screen()
 {
@@ -59,6 +63,47 @@ void Screen::HandleInput(const SDL_Event& event)
     case SDLK_f:
       Fullscreen = !Fullscreen;
       Resize();
+      break;
+    case SDLK_v:
+      ToggleVsync();
+      break;
+    case SDLK_EQUALS:
+      MaxFpsInverse /= 2;
+      if (MaxFpsInverse == 0)
+      {
+        MaxFpsInverse = 1;
+      }
+      break;
+    case SDLK_MINUS:
+      MaxFpsInverse *= 2;
+      break;
     }
   }
+}
+
+void Screen::ToggleVsync()
+{
+#if _WIN32
+  // http://stackoverflow.com/questions/589064/how-to-enable-vertical-sync-in-opengl
+  
+  // this is pointer to function which returns pointer to string with list of all wgl extensions
+  PFNWGLGETEXTENSIONSSTRINGEXTPROC _wglGetExtensionsStringEXT = NULL;
+
+  // determine pointer to wglGetExtensionsStringEXT function
+  _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC) wglGetProcAddress("wglGetExtensionsStringEXT");
+
+  if (strstr(_wglGetExtensionsStringEXT(), "WGL_EXT_swap_control") == NULL)
+  {
+      // not found
+      return;
+  }
+
+  // Extension is supported, init pointers.
+  PFNWGLSWAPINTERVALEXTPROC       wglSwapIntervalEXT = NULL;
+  PFNWGLGETSWAPINTERVALEXTPROC    wglGetSwapIntervalEXT = NULL;
+  wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC) wglGetProcAddress("wglSwapIntervalEXT");
+  wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC) wglGetProcAddress("wglGetSwapIntervalEXT");
+
+  wglSwapIntervalEXT(!wglGetSwapIntervalEXT());
+#endif
 }
