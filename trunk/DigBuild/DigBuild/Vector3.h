@@ -14,6 +14,10 @@ public:
   Vector3 operator -(const Vector3& v);
   void operator +=(const Vector3& v);
   void operator -=(const Vector3& v);
+  Vector3 operator *(float n);
+  Vector3 operator /(float n);
+  void operator *=(float n);
+  void operator /=(float n);
   float* get3f(float* arr);
 
   float X() { return x; }

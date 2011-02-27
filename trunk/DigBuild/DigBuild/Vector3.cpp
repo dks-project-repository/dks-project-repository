@@ -74,6 +74,38 @@ void Vector3::operator -=(const Vector3& v)
     z -= v.z;
 }
 
+Vector3 Vector3::operator *(float n)
+{
+  return Vector3(
+    x * n,
+    y * n,
+    z * n
+    );
+}
+
+Vector3 Vector3::operator /(float n)
+{
+  return Vector3(
+    x / n,
+    y / n,
+    z / n
+    );
+}
+
+void Vector3::operator *=(float n)
+{
+    x *= n;
+    y *= n;
+    z *= n;
+}
+
+void Vector3::operator /=(float n)
+{
+    x /= n;
+    y /= n;
+    z /= n;
+}
+
 float* Vector3::get3f(float* arr)
 {
   arr[0] = x;

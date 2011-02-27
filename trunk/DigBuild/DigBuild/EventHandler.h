@@ -4,13 +4,25 @@
 #include <vector>
 #include "Vector3.h"
 
+enum RemoveState
+{
+  HANDLER_ON,
+  HANDLER_REMOVING,
+  HANDLER_OFF
+};
+
 class EventHandler
 {
 public:
+  EventHandler();
   void Add();
   void Remove();
+  void CompleteRemove();
+  RemoveState HandlerState() { return handlerState; }
 protected:
   virtual void OneFunctionMustBeVirtual();
+private:
+  RemoveState handlerState;
 };
 
 class Drawable : public virtual EventHandler
@@ -39,4 +51,5 @@ namespace ObjectLists
   extern std::vector<Drawable*> drawables;
   extern std::vector<Movable*> movables;
   extern std::vector<Inputable*> inputables;
+  extern std::vector<EventHandler*> toBeRemoved;
 };

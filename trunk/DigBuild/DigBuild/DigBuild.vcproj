@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib opengl32.lib glu32.lib SDL_image.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib opengl32.lib glu32.lib SDL_image.lib SDL_ttf.lib"
 				AdditionalLibraryDirectories="&quot;..\SDL\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
@@ -86,8 +86,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copy DLLs"
-				CommandLine="copy ..\SDL\lib\*.dll ..\Debug"
+				Description="Copy DLLs and font"
+				CommandLine="copy ..\SDL\lib\*.dll ..\Debug&#x0D;&#x0A;copy ..\fonts\BitStreamVera\VeraMono.ttf ..\Debug"
 			/>
 		</Configuration>
 		<Configuration
@@ -194,6 +194,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HUD.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD.h"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -234,6 +242,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\wglext.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

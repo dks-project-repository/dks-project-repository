@@ -3,6 +3,12 @@
 std::vector<Drawable*> ObjectLists::drawables;
 std::vector<Movable*> ObjectLists::movables;
 std::vector<Inputable*> ObjectLists::inputables;
+std::vector<EventHandler*> ObjectLists::toBeRemoved;
+
+EventHandler::EventHandler()
+{
+  handlerState = HANDLER_OFF;
+}
 
 void EventHandler::Add()
 {
@@ -21,10 +27,23 @@ void EventHandler::Add()
   {
     ObjectLists::inputables.push_back(i);
   }
+
+  handlerState = HANDLER_ON;
 }
 
 void EventHandler::Remove()
 {
+  ObjectLists::toBeRemoved.push_back(this);
+  handlerState = HANDLER_REMOVING;
+}
+
+void EventHandler::CompleteRemove()
+{
+  if (HandlerState() != HANDLER_REMOVING)
+  {
+    return;
+  }
+  
   Drawable* d = dynamic_cast<Drawable*>(this);
   Movable* m = dynamic_cast<Movable*>(this);
   Inputable* i = dynamic_cast<Inputable*>(this);
@@ -64,6 +83,8 @@ void EventHandler::Remove()
       }
     }
   }
+
+  handlerState = HANDLER_OFF;
 }
 
 void EventHandler::OneFunctionMustBeVirtual()

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Cube.h"
 #include "EventHandler.h"
+#include "HUD.h"
 #include "Screen.h"
 
 #include <math.h>
@@ -12,6 +13,7 @@
 
 bool isQuit = false;
 bool isPaused = false;
+HUD* hud = 0;
 
 void draw()
 {
@@ -103,6 +105,12 @@ void handleInput()
     {
       (*it)->HandleInput(event);
     }
+
+    for (int i = ObjectLists::toBeRemoved.size() - 1; i >= 0; i--)
+    {
+      ObjectLists::toBeRemoved[i]->CompleteRemove();
+    }
+    ObjectLists::toBeRemoved.clear();
   }
 }
 
@@ -118,6 +126,9 @@ void buildScene()
   cube = new Cube(Vector3(sqrt(2.0f), 0, 0), 0x0000ff);
   cube->RotateDirection = -1;
   cube->Add();
+
+  hud = new HUD();
+  hud->Add();
 }
 
 int main(int argc, char* args[])
@@ -126,8 +137,6 @@ int main(int argc, char* args[])
 		return 1;
 
   buildScene();
-
-	const Uint32 frameRateDelay = 1000 / 60; //capped at 60fps
 
   Uint32 numTicks;
   Uint32 lastTicks;
@@ -148,7 +157,7 @@ int main(int argc, char* args[])
 
     // Step 3: handle animation
     lastTicks = nowTicks; 
-    while ((nowTicks = SDL_GetTicks()) - lastTicks < frameRateDelay) {}
+    while ((nowTicks = SDL_GetTicks()) - lastTicks < Screen::MaxFpsInverse) {}
     numTicks = nowTicks - lastTicks;
     update(numTicks);
 
@@ -156,6 +165,10 @@ int main(int argc, char* args[])
     draw();
 	}
 
+  if (hud)
+  {
+    delete hud;
+  }
 	SDL_Quit();
 
   //TODO: clean up the data in our vectors? This would require a change to shared pointers

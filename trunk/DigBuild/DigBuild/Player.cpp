@@ -136,7 +136,7 @@ void Player::Update(unsigned int ticks)
   //{
   //	yaw -= rotateStep;
   //}
-  Vector3 lookDirection = Vector3(sin(yaw * Utils::PIOVER180), 0, cos(yaw * Utils::PIOVER180));
+  Vector3 lookDirection = Vector3(sin(yaw * Utils::PIOVER180), 0, cos(yaw * Utils::PIOVER180)) * translateStep;
   Vector3 sideDirection = lookDirection.cross(Vector3(0, 1, 0));
   if (movement.forward)
   {

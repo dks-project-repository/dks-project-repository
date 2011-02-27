@@ -12,8 +12,11 @@ public:
   static int Width;
   static int Height;
   static bool Fullscreen;
+  static Uint32 MaxFpsInverse;
 
 private:
+  void ToggleVsync();
+
   static int FullWidth;
   static int FullHeight;
 };
