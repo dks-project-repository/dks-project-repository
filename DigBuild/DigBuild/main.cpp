@@ -77,40 +77,57 @@ void update(unsigned int numTicks)
   }
 }
 
+void handleEvent(SDL_Event const& event)
+{
+	if (event.type == SDL_QUIT)
+	{
+		isQuit = true; 
+	}
+	else if (event.type == SDL_KEYDOWN)
+  {
+    switch (event.key.keysym.sym)
+    {
+    case SDLK_ESCAPE:
+      isQuit = true;
+      break;
+    case SDLK_p:
+      isPaused = !isPaused;
+      break;
+    }
+  }
+  else if (isPaused && event.type == SDL_MOUSEMOTION)
+  {
+    return;
+  }
+
+  std::vector<Inputable*>::iterator it;
+  for (it=ObjectLists::inputables.begin(); it < ObjectLists::inputables.end(); it++)
+  {
+    (*it)->HandleInput(event);
+  }
+
+  for (int i = ObjectLists::toBeRemoved.size() - 1; i >= 0; i--)
+  {
+    ObjectLists::toBeRemoved[i]->CompleteRemove();
+  }
+  ObjectLists::toBeRemoved.clear();
+}
+
 void handleInput()
 {
 	SDL_Event event;
 
+  while(isPaused && !isQuit)
+  {
+    if (SDL_WaitEvent(&event))
+    {
+      handleEvent(event);
+    }
+  }
+
 	while (SDL_PollEvent(&event))
 	{
-		if (event.type == SDL_QUIT)
-		{
-			isQuit = true; 
-		}
-		else if (event.type == SDL_KEYDOWN)
-    {
-      switch (event.key.keysym.sym)
-      {
-      case SDLK_ESCAPE:
-        isQuit = true;
-        break;
-      case SDLK_p:
-        isPaused = !isPaused;
-        break;
-      }
-    }
-
-    std::vector<Inputable*>::iterator it;
-    for (it=ObjectLists::inputables.begin(); it < ObjectLists::inputables.end(); it++)
-    {
-      (*it)->HandleInput(event);
-    }
-
-    for (int i = ObjectLists::toBeRemoved.size() - 1; i >= 0; i--)
-    {
-      ObjectLists::toBeRemoved[i]->CompleteRemove();
-    }
-    ObjectLists::toBeRemoved.clear();
+    handleEvent(event);
   }
 }
 
@@ -147,21 +164,13 @@ int main(int argc, char* args[])
     // Step 1: handle input
     handleInput();
 
-    // Step 2: handle pause
-		if (isPaused)
-		{
-			SDL_Delay(250);
-      nowTicks = SDL_GetTicks();
-			continue;
-		}
-
-    // Step 3: handle animation
+    // Step 2: handle animation
     lastTicks = nowTicks; 
     while ((nowTicks = SDL_GetTicks()) - lastTicks < Screen::MaxFpsInverse) {}
     numTicks = nowTicks - lastTicks;
     update(numTicks);
 
-    // Step 4: handle drawing
+    // Step 3: handle drawing
     draw();
 	}
 
